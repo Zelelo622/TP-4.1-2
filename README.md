@@ -12,4 +12,6 @@
 
 [Trello](https://trello.com/invite/b/IjaLoiGB/ATTI1982890413bb7aca5c1343be6de4d01f571786FE/продовольственный-онлайн-супермаркет-с-доставкой-на-дом)  
 
-[Miro](https://miro.com/app/board/uXjVPirvLH8=/?share_link_id=660079656063)
+[Miro](https://miro.com/app/board/uXjVPirvLH8=/?share_link_id=660079656063)  
+
+[Figma](https://clck.ru/33eTY5)
