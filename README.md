@@ -15,4 +15,4 @@
 
 [Miro](https://miro.com/app/board/uXjVPirvLH8=/?share_link_id=660079656063)  
 
-[Figma](https://clck.ru/33eTY5)
+[Figma](https://clck.ru/33i4oo)
