@@ -16,3 +16,5 @@
 [Miro](https://miro.com/app/board/uXjVPirvLH8=/?share_link_id=660079656063)  
 
 [Figma](https://clck.ru/33i4oo)
+
+[Техническое задание](https://github.com/Zelelo622/TP-4.1-2/blob/main/Documentation/%D0%A2%D0%97.pdf)
