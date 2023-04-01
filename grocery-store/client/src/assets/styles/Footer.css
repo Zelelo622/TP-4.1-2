@@ -1,0 +1,32 @@
+.footer {
+  font-family: "Montserrat", sans-serif;
+  border-top: 2px solid rgba(0, 0, 0, 0.05);
+}
+
+.footer__inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+}
+
+.footer__right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.footer__contact-info {
+  margin-bottom: 8px;
+}
+
+@media (max-width: 400px) {
+  .logo {
+    margin-bottom: 20px;
+  }
+
+  .footer__inner {
+    justify-content: center;
+    flex-direction: column;
+  }
+}

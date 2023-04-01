@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import '../assets/styles/Header.css';
-import { Button, Container, Form, NavLink } from 'react-bootstrap';
+import { Container, NavLink } from 'react-bootstrap';
 
 const Header = () => {
     const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
@@ -14,21 +14,11 @@ const Header = () => {
 
     return (
         <>
-            <div className="header">
+            <header className="header">
                 <Container>
                     <div className='header__inner'>
                         <div className="header__left">
                             <h1 className="logo"><NavLink to="#!">DIEGO</NavLink></h1>
-                            {/* <Form className="search d-flex mx-5">
-                                <Form.Control
-                                    type="search"
-                                    placeholder="поиск"
-                                    className="me-2"
-                                    aria-label="Search"
-                                />
-                                <Button variant="outline-success">Поиск</Button>
-                            </Form> */}
-
                             <form className='search'>
                                 <input className='search__input' type="text" placeholder="Search" />
                                 <button className='search__btn' type="submit">
@@ -67,7 +57,7 @@ const Header = () => {
                         </div>
                     </div>
                 </Container>
-            </div>
+            </header>
             <div className={`mobile-nav ${isMobileNavOpen ? 'active' : ''}`}>
 
                 <nav className="mobile-nav-list">
