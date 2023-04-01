@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
-import '../styles/Auth.css';
+import '../assets/styles/Auth.css';
 import { useLocation } from 'react-router';
 import { LOGIN_ROUTE, REGISTRATION_ROUTE } from '../utils/consts';
 import { NavLink } from 'react-router-dom';
