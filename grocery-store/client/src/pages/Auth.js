@@ -1,13 +1,38 @@
-import React from 'react';
-import { Container } from 'react-bootstrap';
-import '../assets/styles/Auth.css';
+import React, { useContext, useState } from 'react';
+import { Button, Container } from 'react-bootstrap';
+import '../assets/styles/Auth.css'
 import { useLocation } from 'react-router';
-import { LOGIN_ROUTE, REGISTRATION_ROUTE } from '../utils/consts';
-import { NavLink } from 'react-router-dom';
+import { HOME, LOGIN_ROUTE, REGISTRATION_ROUTE } from '../utils/consts';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { login, registration } from '../http/userAPI';
+import { observer } from "mobx-react-lite";
+import { Context } from "../index";
 
-const Auth = () => {
+const Auth = observer(() => {
+    const { user } = useContext(Context)
     const location = useLocation();
+    const navigate = useNavigate();
     const isLogin = location.pathname === LOGIN_ROUTE;
+    const [first_name, setFirstName] = useState('');
+    const [second_name, setSecondName] = useState('');
+    const [phone, setPhone] = useState('');
+    const [password, setPassword] = useState('');
+
+    const click = async () => {
+        try {
+            let data;
+            if (isLogin) {
+                data = await login(phone, password);
+            } else {
+                data = await registration(first_name, second_name, phone, password);
+            }
+            user.setUser(data);
+            user.setIsAuth(true);
+            navigate(HOME);
+        } catch (e) {
+            alert(e.response.data.message);
+        }
+    }
 
     return (
         <Container>
@@ -20,12 +45,12 @@ const Auth = () => {
                                 <label className="login-label" htmlFor="phone-input">
                                     Телефон
                                 </label>
-                                <input className="login-input" type="tel" id="phone-input" placeholder="Введите номер телефона..." />
+                                <input className="login-input" type="tel" id="phone-input" placeholder="Введите номер телефона..." value={phone} onChange={e => setPhone(e.target.value)} />
                                 <label className="login-label" htmlFor="password-input">
                                     Пароль
                                 </label>
-                                <input className="login-input" type="password" id="password-input" placeholder="Введите пароль..." />
-                                <button className="login-button" type="submit">
+                                <input className="login-input" type="password" id="password-input" placeholder="Введите пароль..." value={password} onChange={e => setPassword(e.target.value)} />
+                                <button onClick={click} className="login-button" type="button">
                                     Войти
                                 </button>
                             </>
@@ -34,21 +59,21 @@ const Auth = () => {
                                 <label className="login-label" htmlFor="name-input">
                                     Имя
                                 </label>
-                                <input className="login-input" type="text" id="name-input" placeholder="Введите свое имя..." />
+                                <input className="login-input" type="text" id="name-input" placeholder="Введите свое имя..." value={first_name} onChange={e => setFirstName(e.target.value)} />
                                 <label className="login-label" htmlFor="secname-input">
                                     Фамилия
                                 </label>
-                                <input className="login-input" type="text" id="secname-input" placeholder="Введите свою фамилию..." />
+                                <input className="login-input" type="text" id="secname-input" placeholder="Введите свою фамилию..." value={second_name} onChange={e => setSecondName(e.target.value)} />
                                 <label className="login-label" htmlFor="phone-input">
                                     Телефон
                                 </label>
-                                <input className="login-input" type="tel" id="phone-input" placeholder="Введите номер телефона..." />
+                                <input className="login-input" type="tel" id="phone-input" placeholder="Введите номер телефона..." value={phone} onChange={e => setPhone(e.target.value)} />
                                 <label className="login-label" htmlFor="password-input">
                                     Пароль
                                 </label>
-                                <input className="login-input" type="password" id="password-input" placeholder="Введите пароль..." />
-                                <button className="login-button" type="submit">
-                                    Войти
+                                <input className="login-input" type="password" id="password-input" placeholder="Введите пароль..." value={password} onChange={e => setPassword(e.target.value)} />
+                                <button onClick={click} className="login-button" type="button">
+                                    Зарегистрироваться
                                 </button>
                             </>
                         }
@@ -72,6 +97,6 @@ const Auth = () => {
             </div>
         </Container>
     );
-};
+});
 
 export default Auth;
