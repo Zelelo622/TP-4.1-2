@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import '../assets/styles/Home.css'
@@ -6,9 +6,15 @@ import { Container } from 'react-bootstrap';
 import { observer } from 'mobx-react-lite';
 import { Context } from '..';
 import CategoryList from '../components/CategoryList';
+import { fetchCategorys } from '../http/categoryAPI';
 
 const Home = observer(() => {
     const { category } = useContext(Context);
+
+    useEffect(() => {
+        fetchCategorys().then(data => category.setCategorys(data));
+    }, []);
+
     return (
         <>
             <div className='container-page'>
