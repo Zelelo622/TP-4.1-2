@@ -18,7 +18,7 @@ const Category = sequelize.define('category', {
 
 const Product = sequelize.define('product', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    name: {type: DataTypes.STRING, unique: true, allowNull: false},
+    name: {type: DataTypes.STRING, allowNull: false},
     price: {type: DataTypes.FLOAT(10, 2), allowNull: false},
     composition: {type: DataTypes.TEXT, defaultValue: '', allowNull: false},
     protein: {type: DataTypes.FLOAT(5, 2), allowNull: false},
