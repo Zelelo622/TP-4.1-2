@@ -100,7 +100,7 @@
 }
 
 .mobile-nav-list li a {
-  color: #292929;
+  color: #000;
   transition: all 0.2s;
 }
 .mobile-nav-list li a:hover {

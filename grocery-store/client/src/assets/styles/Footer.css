@@ -21,12 +21,12 @@
 }
 
 @media (max-width: 400px) {
-  .logo {
-    margin-bottom: 20px;
-  }
-
   .footer__inner {
     justify-content: center;
     flex-direction: column;
+  }
+
+  .footer__right {
+    align-items: center;
   }
 }

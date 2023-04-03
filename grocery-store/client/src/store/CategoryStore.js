@@ -10,10 +10,6 @@ export default class CategoryStore {
         this._categorys = categorys;
     }
 
-    set categorys(categorys) {
-        this._categorys = categorys;
-    }
-
     get categorys() {
         return this._categorys;
     }

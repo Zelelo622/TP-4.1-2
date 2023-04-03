@@ -5,7 +5,7 @@ import '../assets/styles/Home.css'
 import { Container } from 'react-bootstrap';
 import { observer } from 'mobx-react-lite';
 import { Context } from '..';
-import CategoryList from '../components/CategoryList';
+import CategoryList from '../components/category/CategoryList';
 import { fetchCategorys } from '../http/categoryAPI';
 
 const Home = observer(() => {

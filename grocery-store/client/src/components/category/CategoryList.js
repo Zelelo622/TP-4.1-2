@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
-import { Context } from '..';
+import { Context } from '../..';
 import { observer } from 'mobx-react-lite';
-import { Row } from 'react-bootstrap';
 import CategoryItem from './CategoryItem';
 
 const CategoryList = observer(() => {

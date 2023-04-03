@@ -1,6 +1,7 @@
 import Auth from "./pages/Auth"
 import Home from "./pages/Home"
-import { HOME, LOGIN_ROUTE, REGISTRATION_ROUTE } from "./utils/consts"
+import Products from "./pages/Products"
+import { HOME, LOGIN_ROUTE, PRODUCTS, REGISTRATION_ROUTE } from "./utils/consts"
 
 export const authRoutes = [
     
@@ -18,5 +19,9 @@ export const publicRoutes = [
     {
         path: HOME,
         Component: Home
+    },
+    {
+        path: PRODUCTS + '/:categoryId',
+        Component: Products
     }
 ]
