@@ -67,13 +67,15 @@ const ProductPage = observer(() => {
                             </div>
                         </div> */}
 
-                    {/* <ProductCard products={product.products} /> */}
+                        <ProductCard products={product.products} />
+
                     {/* </div> */}
-                    <ul>
+                    
+                    {/* <ul>
                         {product.products.map((product) => (
                             <li key={product.id}>{product.name}</li>
                         ))}
-                    </ul>
+                    </ul> */}
                 </main>
                 <Footer />
             </div>
