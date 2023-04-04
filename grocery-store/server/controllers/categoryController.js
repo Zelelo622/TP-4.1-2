@@ -1,21 +1,9 @@
 const { Category } = require('../models/models');
-const uuid = require('uuid');
 const path = require('path');
+const uuid = require('uuid');
+const ApiError = require('../error/ApiError');
 
 class CategoryController {
-    async getProductsByCategory(req, res, next) {
-        const id = req.params.id;
-
-        try {
-            const category = await Category.findByPk(id, { include: [Product] });
-            const products = category.products;
-
-            res.json(products);
-        } catch (error) {
-            next(ApiError.badRequest(e.message));
-        }
-    }
-
     async create(req, res, next) {
         try {
             const { name } = req.body;
@@ -26,7 +14,7 @@ class CategoryController {
             const category = await Category.create({ name, img: fileName });
 
             return res.json(category);
-        } catch(e) {
+        } catch (e) {
             next(ApiError.badRequest(e.message));
         }
     }
@@ -40,7 +28,7 @@ class CategoryController {
         const id = req.params.id;
         const category = await Category.findOne(
             {
-                where: {id}
+                where: { id }
             }
         );
         return res.json(category);

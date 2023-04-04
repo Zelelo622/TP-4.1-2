@@ -1,9 +1,45 @@
-const { Product, Category } = require('../models/models');
+const { Product } = require('../models/models');
+const { Op } = require('sequelize');
 const uuid = require('uuid');
 const path = require('path');
 const ApiError = require('../error/ApiError');
 
 class ProductController {
+    async getProductsByCategory(req, res, next) {
+        const categoryId = req.query.categoryId;
+        const { priceRange, isVegetarian, calRange } = req.query;
+
+        const filter = {};
+
+        if (priceRange) {
+            const [priceMin, priceMax] = priceRange.split('-');
+            filter.price = {
+                [Op.between]: [priceMin, priceMax],
+            };
+        }
+
+        if (isVegetarian === 'true') {
+            filter.vegetarian = true;
+        } else if (isVegetarian === 'false') {
+            filter.vegetarian = false;
+        }
+
+
+        if (calRange) {
+            const [calMin, calMax] = calRange.split('-');
+            filter.calories = {
+                [Op.between]: [calMin, calMax],
+            };
+        }
+
+        try {
+            const products = await Product.findAll({ where: { categoryId, ...filter } });
+            res.json(products);
+        } catch (e) {
+            next(ApiError.badRequest(e.message));
+        }
+    }
+
     async create(req, res, next) {
         try {
             const { name, price, composition, protein, fat, carbohydrates, calories, weight, vegetarian, categoryId } = req.body;
