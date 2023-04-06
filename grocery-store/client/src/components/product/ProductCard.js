@@ -8,16 +8,18 @@ const ProductCard = ({ products }) => (
     //     <button>Add to Cart</button>
     // </div>
 
-    <ul>
-        {products.map(product => (
-            <li key={product.id}>
-                <img style={{ width: '150px' }} src={process.env.REACT_APP_API_URL + product.img} alt={product.name} />
-                <h3>{product.name}</h3>
-                <p>{product.price}</p>
-                <button>Add to cart</button>
-            </li>
-        ))}
-    </ul>
+    <div className='product-card'>
+        <ul className='product-list'>
+            {products.map(product => (
+                <li className='product-item' key={product.id}>
+                    <img className='product-image' src={process.env.REACT_APP_API_URL + product.img} alt={product.name} />
+                    <h3 className='product-name'>{product.name}</h3>
+                    <p className='product-price'>{product.price}</p>
+                    <button className='product-button'>Add to cart</button>
+                </li>
+            ))}
+        </ul>
+    </div>
 );
 
 export default ProductCard;

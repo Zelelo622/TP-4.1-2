@@ -3,13 +3,13 @@ import { Button, Container } from 'react-bootstrap';
 import '../assets/styles/Auth.css'
 import { useLocation } from 'react-router';
 import { HOME, LOGIN_ROUTE, REGISTRATION_ROUTE } from '../utils/consts';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { login, registration } from '../http/userAPI';
 import { observer } from "mobx-react-lite";
 import { Context } from "../index";
 
 const Auth = observer(() => {
-    const { user } = useContext(Context)
+    const { user } = useContext(Context);
     const location = useLocation();
     const navigate = useNavigate();
     const isLogin = location.pathname === LOGIN_ROUTE;
@@ -38,6 +38,9 @@ const Auth = observer(() => {
         <Container>
             <div className="page-container">
                 <div className="login-container">
+                    <div className='login-link-back'>
+                        <Link to={HOME}>Назад</Link>
+                    </div>
                     <h2 className="login-header">{isLogin ? 'Войти в Diego' : 'Регистрация на Diego'}</h2>
                     <form className="login-form">
                         {isLogin ?

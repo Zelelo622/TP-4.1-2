@@ -7,6 +7,8 @@ import { observer } from 'mobx-react-lite';
 import { Context } from '../index';
 import { fetchProductByCategory } from '../http/productAPI';
 import Filter from '../components/product/Filter';
+import '../assets/styles/Products.css';
+import { Container } from 'react-bootstrap';
 
 const ProductPage = observer(() => {
     const { product } = useContext(Context);
@@ -37,8 +39,10 @@ const ProductPage = observer(() => {
             <div className='container-page'>
                 <Header />
                 <main className='main'>
-                    <Filter onFilterChange={onFilterChange} />
-                    <ProductCard products={product.products} />
+                    <Container>
+                        <Filter onFilterChange={onFilterChange} />
+                        <ProductCard products={product.products} />
+                    </Container>
                 </main>
                 <Footer />
             </div>
