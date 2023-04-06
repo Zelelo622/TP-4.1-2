@@ -2,13 +2,13 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import ProductCard from '../components/product/ProductCard';
 import { observer } from 'mobx-react-lite';
 import { Context } from '../index';
 import { fetchProductByCategory } from '../http/productAPI';
 import Filter from '../components/product/Filter';
 import '../assets/styles/Products.css';
 import { Container } from 'react-bootstrap';
+import ProductList from '../components/product/ProductList';
 
 const ProductPage = observer(() => {
     const { product } = useContext(Context);
@@ -40,8 +40,10 @@ const ProductPage = observer(() => {
                 <Header />
                 <main className='main'>
                     <Container>
+                        <div className='products'>
                         <Filter onFilterChange={onFilterChange} />
-                        <ProductCard products={product.products} />
+                        <ProductList />
+                        </div>
                     </Container>
                 </main>
                 <Footer />
