@@ -31,6 +31,11 @@
   margin-bottom: 20px;
 }
 
+.filter .filter-buttons {
+  display: flex;
+  justify-content: center;
+}
+
 .filter-inputs {
   display: flex;
   justify-content: space-between;
@@ -224,30 +229,38 @@
   content: "₽";
 }
 
-@media (max-width: 1100px) {
-  .products {
-    justify-content: space-around;
-  }
-
-  .product-list {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 991px) {
-  .products {
-    display: block;
-  }
+@media (max-width: 1200px) {
   .product-image {
     width: 100%;
   }
+
   .product-button {
     width: 40px;
     height: 40px;
   }
+
+  .products {
+    display: block;
+  }
+  .filter {
+    width: 80%;
+    margin: 0 auto;
+    margin-bottom: 30px;
+    max-width: none;
+  }
+}
+
+@media (max-width: 991px) {
+  .filter {
+    width: 100%;
+  }
 }
 
 @media (max-width: 770px) {
+  .product-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .product-name {
     font-size: 20px;
   }

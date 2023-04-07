@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import Slider from 'rc-slider';
-import 'rc-slider/assets/index.css';
-import { NumericFormat } from 'react-number-format';
+import React, { useState, useEffect } from "react";
+import Slider from "rc-slider";
+import "rc-slider/assets/index.css";
+import { NumericFormat } from "react-number-format";
+import { Button, Modal } from "react-bootstrap";
 
 
 const Filter = ({ onFilterChange }) => {
   const [priceRange, setPriceRange] = useState([0, 1000]);
-  const [isVegetarian, setIsVegetarian] = useState('');
+  const [isVegetarian, setIsVegetarian] = useState("");
   const [calRange, setCalRange] = useState([0, 2000]);
   const [timer, setTimer] = useState(null);
 
   const handleApplyFilters = () => {
     const filters = {
-      priceRange: priceRange.join('-'),
+      priceRange: priceRange.join("-"),
       isVegetarian: isVegetarian || undefined,
-      calRange: calRange.join('-'),
+      calRange: calRange.join("-"),
     };
     onFilterChange(filters);
   };
@@ -25,28 +26,32 @@ const Filter = ({ onFilterChange }) => {
   }, [priceRange, isVegetarian, calRange]);
 
   return (
-    <div className='filter'>
-      <h3 className='filter-title'>Фильтр:</h3>
-      <div className='filter-item'>
+    <div className="filter">
+      <h3 className="filter-title">Фильтр:</h3>
+      <div className="filter-item">
         <label>Цена:</label>
-        <div className='filter-inputs'>
+        <div className="filter-inputs">
           <NumericFormat
             thousandSeparator={false}
             allowNegative={false}
             placeholder="Min"
             value={priceRange[0]}
-            onValueChange={(values) => setPriceRange([values.value, priceRange[1]])}
+            onValueChange={(values) =>
+              setPriceRange([values.value, priceRange[1]])
+            }
           />
           <NumericFormat
             thousandSeparator={false}
             allowNegative={false}
             placeholder="Max"
             value={priceRange[1]}
-            onValueChange={(values) => setPriceRange([priceRange[0], values.value])}
+            onValueChange={(values) =>
+              setPriceRange([priceRange[0], values.value])
+            }
           />
         </div>
         <Slider
-          className='filter-slider'
+          className="filter-slider"
           range
           min={0}
           max={1000}
@@ -54,9 +59,9 @@ const Filter = ({ onFilterChange }) => {
           onChange={(value) => setPriceRange(value)}
         />
       </div>
-      <div className='filter-item'>
+      <div className="filter-item">
         <label>Количество калорий:</label>
-        <div className='filter-inputs'>
+        <div className="filter-inputs">
           <NumericFormat
             thousandSeparator={false}
             allowNegative={false}
@@ -73,7 +78,7 @@ const Filter = ({ onFilterChange }) => {
           />
         </div>
         <Slider
-          className='filter-slider'
+          className="filter-slider"
           range
           min={0}
           max={2000}
@@ -81,20 +86,41 @@ const Filter = ({ onFilterChange }) => {
           onChange={(value) => setCalRange(value)}
         />
       </div>
-      <div className='filter-item'>
+      <div className="filter-item">
         <label>Для вегетарианцев:</label>
-        <div className='filter-checkboxes'>
+        <div className="filter-checkboxes">
           <label>
-            <input type="checkbox" checked={isVegetarian === 'true'} onChange={(e) => setIsVegetarian(e.target.checked ? 'true' : '')} />
+            <input
+              type="checkbox"
+              checked={isVegetarian === "true"}
+              onChange={(e) => setIsVegetarian(e.target.checked ? "true" : "")}
+            />
             <span className="checkbox-custom"></span>
             Да
           </label>
           <label>
-            <input type="checkbox" checked={isVegetarian === 'false'} onChange={(e) => setIsVegetarian(e.target.checked ? 'false' : '')} />
+            <input
+              type="checkbox"
+              checked={isVegetarian === "false"}
+              onChange={(e) => setIsVegetarian(e.target.checked ? "false" : "")}
+            />
             <span className="checkbox-custom"></span>
             Нет
           </label>
         </div>
+      </div>
+      <div className="filter-buttons">
+        <Button
+          variant="primary"
+          onClick={() => {
+            setPriceRange([0, 1000]);
+            setIsVegetarian("");
+            setCalRange([0, 2000]);
+            onFilterChange({});
+          }}
+        >
+          Очистить фильтры
+        </Button>
       </div>
     </div>
   );
