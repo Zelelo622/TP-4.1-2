@@ -186,6 +186,10 @@
 }
 
 @media (max-width: 520px) {
+  .header {
+    margin-bottom: 42px;
+  }
+
   .header__left {
     justify-content: space-between;
   }

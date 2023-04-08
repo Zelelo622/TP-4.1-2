@@ -1,23 +1,55 @@
-import React from 'react';
+// import React from 'react';
 
-const ProductCard = ({ products }) => (
-    // <div className="product-card">
-    //     <img src={products.img} alt={products.name} />
-    //     <h3>{products.name}</h3>
-    //     <p>Price: {products.price}</p>
-    //     <button>Add to Cart</button>
-    // </div>
+// const ProductCard = ({ products }) => {
 
-    <ul>
-        {products.map(product => (
-            <li key={product.id}>
-                <img style={{ width: '150px' }} src={process.env.REACT_APP_API_URL + product.img} alt={product.name} />
-                <h3>{product.name}</h3>
-                <p>{product.price}</p>
-                <button>Add to cart</button>
-            </li>
-        ))}
-    </ul>
-);
+//     const handleAddToCart = (product) => {
+//         const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+//         cartItems.push(product);
+//         localStorage.setItem('cartItems', JSON.stringify(cartItems));
+//     };
 
+//     return (
+//         <div className='product-card'>
+//             <ul className='product-list'>
+//                 {products.map(product => (
+//                     <li className='product-item' key={product.id}>
+//                         <img style={{ width: 150 }} className='product-image' src={process.env.REACT_APP_API_URL + product.img} alt={product.name} />
+//                         <h3 className='product-name'>{product.name}</h3>
+//                         <p className='product-price'>{product.price}</p>
+//                         <button className='product-button' onClick={() => handleAddToCart(product)}></button>
+//                     </li>
+//                 ))}
+//             </ul>
+//         </div>
+//     );
+// };
+
+// export default ProductCard;
+import React from "react";
+
+const ProductCard = ({ product }) => {
+  const handleAddToCart = (product) => {
+    const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+    cartItems.push(product);
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  };
+
+  return (
+    <li className="product-item">
+      <img
+        className="product-image"
+        src={process.env.REACT_APP_API_URL + product.img}
+        alt={product.name}
+      />
+      <h3 className="product-name">{product.name}</h3>
+      <div className="product-basket">
+        <p className="product-price">{product.price}</p>
+        <button
+          className="product-button"
+          onClick={() => handleAddToCart(product)}
+        ></button>
+      </div>
+    </li>
+  );
+};
 export default ProductCard;
