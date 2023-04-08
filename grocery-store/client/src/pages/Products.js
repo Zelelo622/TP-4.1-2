@@ -7,8 +7,9 @@ import { Context } from "../index";
 import { fetchProductByCategory } from "../http/productAPI";
 import Filter from "../components/product/Filter";
 import "../assets/styles/Products.css";
-import { Container } from "react-bootstrap";
+import { Row, Col, Container } from "react-bootstrap";
 import ProductList from "../components/product/ProductList";
+import Pages from "../components/product/Pages";
 
 const ProductPage = observer(() => {
   const { product } = useContext(Context);
@@ -21,14 +22,38 @@ const ProductPage = observer(() => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const data = await fetchProductByCategory(categoryId, filters);
-        product.setProducts(data);
+        const data = await fetchProductByCategory(
+          categoryId,
+          filters,
+          product.page,
+          12
+        );
+        product.setProducts(data.rows);
+        product.setTotalCount(data.count);
       } catch (e) {
         console.error(e);
       }
     };
     fetchProducts();
   }, [categoryId, filters]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await fetchProductByCategory(
+          categoryId,
+          filters,
+          product.page,
+          12
+        );
+        product.setProducts(data.rows);
+        product.setTotalCount(data.count);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchProducts();
+  }, [product.page]);
 
   const onFilterChange = (newFilters) => {
     setFilters(newFilters);
@@ -40,10 +65,17 @@ const ProductPage = observer(() => {
         <Header />
         <main className="main">
           <Container>
-            <div className="products">
-              <Filter onFilterChange={onFilterChange} />
-              <ProductList />
-            </div>
+            <Row className="mt-2">
+              <div className="products">
+                <div>
+                  <Filter onFilterChange={onFilterChange} />
+                </div>
+                <div>
+                  <ProductList />
+                  <Pages />
+                </div>
+              </div>
+            </Row>
           </Container>
         </main>
         <Footer />
