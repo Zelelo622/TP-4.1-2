@@ -55,8 +55,15 @@ const Products = observer(() => {
     fetchProducts();
   }, [product.page]);
 
+  useEffect(() => {
+    return () => {
+      product.setPage(1);
+    };
+  }, []);
+
   const onFilterChange = (newFilters) => {
     setFilters(newFilters);
+    product.setPage(1);
   };
 
   return (
