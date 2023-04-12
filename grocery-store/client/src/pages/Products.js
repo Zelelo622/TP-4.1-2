@@ -11,7 +11,7 @@ import { Row, Col, Container } from "react-bootstrap";
 import ProductList from "../components/product/ProductList";
 import Pages from "../components/product/Pages";
 
-const ProductPage = observer(() => {
+const Products = observer(() => {
   const { product } = useContext(Context);
   const { categoryId } = useParams();
   const [filters, setFilters] = useState({
@@ -84,4 +84,4 @@ const ProductPage = observer(() => {
   );
 });
 
-export default ProductPage;
+export default Products;
