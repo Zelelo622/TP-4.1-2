@@ -1,0 +1,79 @@
+.product-details-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 20px;
+}
+
+.product-image img {
+  width: 100%;
+  max-width: 300px;
+  object-fit: contain;
+  margin-bottom: 20px;
+}
+
+.product-info {
+  max-width: 600px;
+  margin-left: 20px;
+}
+
+.product-title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.product-cart {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.product-price {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-right: 20px;
+}
+
+.add-to-cart-btn {
+  background-color: #fca311;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.add-to-cart-btn:hover {
+  background-color: #f4a261;
+}
+
+.product-description {
+  margin-bottom: 20px;
+}
+
+.comp-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.comp-text {
+  margin-bottom: 20px;
+}
+
+.nutrition-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.nutrition-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nutrition-item {
+  margin-bottom: 5px;
+}
