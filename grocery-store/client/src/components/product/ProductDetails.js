@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import "../../assets/styles/ProductDetails.css";
 import { handleAddToCart } from "../../utils/cartUtils";
+import { NumericFormat } from "react-number-format";
 
 const ProductDetails = ({ product }) => {
   const [showCaloriesCalculator, setShowCaloriesCalculator] = useState(false);
@@ -12,32 +13,28 @@ const ProductDetails = ({ product }) => {
   };
 
   const { totalProtein, totalFat, totalCarbs } = useMemo(() => {
-    const proteinPerPack = product.protein;
-    const fatPerPack = product.fat;
-    const carbsPerPack = product.carbohydrates;
-    const caloriesPerPack = product.calories;
+    const proteinPer100g = product.protein;
+    const fatPer100g = product.fat;
+    const carbsPer100g = product.carbohydrates;
+    const caloriesPer100g = product.calories;
     const packagingWeight = product.weight;
 
-    const proteinPerCalorie = proteinPerPack / caloriesPerPack;
-    const fatPerCalorie = fatPerPack / caloriesPerPack;
-    const carbsPerCalorie = carbsPerPack / caloriesPerPack;
-
-    const netWeight = (inputCalories / caloriesPerPack) * 100; // Масса нетто в граммах
+    const proteinPerCalorie = proteinPer100g / caloriesPer100g;
+    const fatPerCalorie = fatPer100g / caloriesPer100g;
+    const carbsPerCalorie = carbsPer100g / caloriesPer100g;
 
     const totalCalories = inputCalories;
-    const totalProtein = totalCalories * proteinPerCalorie;
-    const totalFat = totalCalories * fatPerCalorie;
-    const totalCarbs = totalCalories * carbsPerCalorie;
+    const totalWeight = (totalCalories / caloriesPer100g) * 100;
 
-    const totalPacksAmount = inputCalories <= 0 ? 0 : Math.ceil((netWeight + packagingWeight) / 1000);
+    const totalPacksAmount =
+      totalCalories <= 0 ? 0 : Math.ceil(totalWeight / packagingWeight);
 
     setPacksAmount(totalPacksAmount);
 
-    // Возвращаем объект с результатами вычислений
     return {
-      totalProtein,
-      totalFat,
-      totalCarbs,
+      totalProtein: totalCalories * proteinPerCalorie,
+      totalFat: totalCalories * fatPerCalorie,
+      totalCarbs: totalCalories * carbsPerCalorie,
     };
   }, [inputCalories]);
 
@@ -122,12 +119,15 @@ const ProductDetails = ({ product }) => {
               {showCaloriesCalculator ? (
                 <li className="nutrition-item">
                   Ккал: {`.....................................`}
-                  <input
+                  <NumericFormat
                     className="calories-input"
-                    type="number"
-                    placeholder="Введите количество калорий"
+                    thousandSeparator={false}
+                    allowNegative={false}
                     value={inputCalories}
                     onChange={handleInputChange}
+                    format="####"
+                    mask="_"
+                    maxLength={4}
                   />
                 </li>
               ) : (
@@ -139,7 +139,9 @@ const ProductDetails = ({ product }) => {
             </ul>
             {showCaloriesCalculator ? (
               packsAmount > 0 && (
-                <p className="packs-amount">{`Количество упаковок: ${packsAmount}`}</p>
+                <p className="packs-amount">
+                  Количество упаковок: <span>{packsAmount}</span>
+                </p>
               )
             ) : (
               <></>

@@ -3,16 +3,20 @@ import { fetchOneProduct } from "../http/productAPI";
 import { useParams } from "react-router-dom";
 import ProductDetails from "../components/product/ProductDetails";
 import Header from "../components/Header";
-import { Container } from "react-bootstrap";
+import { Container, Spinner } from "react-bootstrap";
 import Footer from "../components/Footer";
 
 const Product = () => {
   const [product, setProduct] = useState({});
+  const [loading, setLoading] = useState(true);
   const { name } = useParams();
 
   useEffect(() => {
-    fetchOneProduct(name).then((data) => setProduct(data));
-  }, []);
+    fetchOneProduct(name).then((data) => {
+      setProduct(data);
+      setLoading(false);
+    });
+  }, [name]);
 
   return (
     <>
@@ -20,7 +24,11 @@ const Product = () => {
         <Header />
         <main className="main">
           <Container>
-            <ProductDetails product={product} />
+            {loading ? (
+              <div><Spinner animation={"grow"} /></div>
+            ) : (
+              <ProductDetails product={product} />
+            )}
           </Container>
         </main>
         <Footer />
