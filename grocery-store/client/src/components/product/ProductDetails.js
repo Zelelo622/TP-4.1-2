@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import "../../assets/styles/ProductDetails.css";
 import { handleAddToCart } from "../../utils/cartUtils";
 
@@ -11,37 +11,60 @@ const ProductDetails = ({ product }) => {
     setInputCalories(e.target.value);
   };
 
-  const calculatePacksAmount = () => {
+  const { totalProtein, totalFat, totalCarbs } = useMemo(() => {
     const proteinPerPack = product.protein;
     const fatPerPack = product.fat;
     const carbsPerPack = product.carbohydrates;
     const caloriesPerPack = product.calories;
+    const packagingWeight = product.weight; // Масса упаковки равна массе нетто
 
     const proteinPerCalorie = proteinPerPack / caloriesPerPack;
     const fatPerCalorie = fatPerPack / caloriesPerPack;
     const carbsPerCalorie = carbsPerPack / caloriesPerPack;
 
-    const totalProtein = inputCalories * proteinPerCalorie;
-    const totalFat = inputCalories * fatPerCalorie;
-    const totalCarbs = inputCalories * carbsPerCalorie;
+    const netWeight = (inputCalories / caloriesPerPack) * 100; // Масса нетто в граммах
 
-    const totalPacksAmount = Math.ceil(inputCalories / caloriesPerPack);
+    const totalCalories = inputCalories;
+    const totalProtein = totalCalories * proteinPerCalorie;
+    const totalFat = totalCalories * fatPerCalorie;
+    const totalCarbs = totalCalories * carbsPerCalorie;
+
+    const totalPacksAmount = Math.ceil((netWeight + packagingWeight) / 1000); // Упаковки в килограммах
 
     setPacksAmount(totalPacksAmount);
+
+    // Возвращаем объект с результатами вычислений
+    return {
+      totalProtein,
+      totalFat,
+      totalCarbs,
+    };
+  }, [inputCalories]);
+
+  const handleCalculatePacksAmount = () => {
+    setInputCalories((inputCalories) => inputCalories + 1); // обновляем inputCalories, чтобы useMemo вызвался заново и пересчитал totalProtein, totalFat, totalCarbs
   };
 
   return (
     <div className="product-details-container">
       <div className="product-image">
-        <img src={process.env.REACT_APP_API_URL + product.img} alt={product.name} />
+        <img
+          src={process.env.REACT_APP_API_URL + product.img}
+          alt={product.name}
+        />
       </div>
       <div className="product-info">
         <h2 className="product-title">{product.name}</h2>
         <div className="product-cart">
           <p className="product-price">{product.price} руб.</p>
-          <button className="add-to-cart-btn button" onClick={(e) => {
-                  handleAddToCart(product);
-                }}>В корзину</button>
+          <button
+            className="add-to-cart-btn button"
+            onClick={(e) => {
+              handleAddToCart(product);
+            }}
+          >
+            В корзину
+          </button>
         </div>
         <div className="product-description">
           <div className="product-comp">
@@ -53,38 +76,70 @@ const ProductDetails = ({ product }) => {
               <p className="nutrition-title">Пищевая ценность на 100г:</p>
               {/* <button className="nutrotion-calc-btn button">Калькулятор калорий</button> */}
               {showCaloriesCalculator ? (
-                <div className="calories-input">
-                <input
-                                type="number"
-                                placeholder="Введите количество калорий"
-                                value={inputCalories}
-                                onChange={handleInputChange}
-                              />
-                <button className="calculate-btn button" onClick={calculatePacksAmount}>
-                Рассчитать
-                </button>
-                </div>
-                ) : (
                 <button
-                className="nutrotion-calc-btn button"
-                onClick={() => setShowCaloriesCalculator(true)}
+                  className="calculate-btn button"
+                  onClick={() => setShowCaloriesCalculator(false)}
                 >
-                Калькулятор калорий
+                  Закрыть
+                </button>
+              ) : (
+                <button
+                  className="nutrotion-calc-btn button"
+                  onClick={() => setShowCaloriesCalculator(true)}
+                >
+                  Калькулятор калорий
                 </button>
               )}
             </div>
-            {packsAmount > 0 && (
-              <p className="packs-amount">{`Количество упаковок: ${packsAmount}`}</p>
-            )}
             <ul className="nutrition-list">
-              <li className="nutrition-item">Белки, г: {`..............................${product.protein}`}</li>
-              <li className="nutrition-item">Жиры, г: {`...............................${product.fat}`}</li>
               <li className="nutrition-item">
-                Углеводы, г: {`........................${product.carbohydrates}`}
+                Белки, г:{" "}
+                {`..............................${
+                  showCaloriesCalculator
+                    ? totalProtein.toFixed(1)
+                    : product.protein
+                }`}
               </li>
-              <li className="nutrition-item">Ккал: {`.....................................${product.calories}`}</li>
-            </ul>
+              <li className="nutrition-item">
+                Жиры, г:{" "}
+                {`...............................${
+                  showCaloriesCalculator ? totalFat.toFixed(1) : product.fat
+                }`}
+              </li>
+              <li className="nutrition-item">
+                Углеводы, г:{" "}
+                {`........................${
+                  showCaloriesCalculator
+                    ? totalCarbs.toFixed(1)
+                    : product.carbohydrates
+                }`}
+              </li>
 
+              {showCaloriesCalculator ? (
+                <li className="nutrition-item">
+                  Ккал: {`.....................................`}
+                  <input
+                    className="calories-input"
+                    type="number"
+                    placeholder="Введите количество калорий"
+                    value={inputCalories}
+                    onChange={handleInputChange}
+                  />
+                </li>
+              ) : (
+                <li className="nutrition-item">
+                  Ккал:{" "}
+                  {`.....................................${product.calories}`}
+                </li>
+              )}
+            </ul>
+            {showCaloriesCalculator ? (
+              packsAmount > 0 && (
+                <p className="packs-amount">{`Количество упаковок: ${packsAmount}`}</p>
+              )
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       </div>
