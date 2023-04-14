@@ -16,7 +16,7 @@ const ProductDetails = ({ product }) => {
     const fatPerPack = product.fat;
     const carbsPerPack = product.carbohydrates;
     const caloriesPerPack = product.calories;
-    const packagingWeight = product.weight; // Масса упаковки равна массе нетто
+    const packagingWeight = product.weight;
 
     const proteinPerCalorie = proteinPerPack / caloriesPerPack;
     const fatPerCalorie = fatPerPack / caloriesPerPack;
@@ -29,7 +29,7 @@ const ProductDetails = ({ product }) => {
     const totalFat = totalCalories * fatPerCalorie;
     const totalCarbs = totalCalories * carbsPerCalorie;
 
-    const totalPacksAmount = Math.ceil((netWeight + packagingWeight) / 1000); // Упаковки в килограммах
+    const totalPacksAmount = inputCalories <= 0 ? 0 : Math.ceil((netWeight + packagingWeight) / 1000);
 
     setPacksAmount(totalPacksAmount);
 
@@ -40,10 +40,6 @@ const ProductDetails = ({ product }) => {
       totalCarbs,
     };
   }, [inputCalories]);
-
-  const handleCalculatePacksAmount = () => {
-    setInputCalories((inputCalories) => inputCalories + 1); // обновляем inputCalories, чтобы useMemo вызвался заново и пересчитал totalProtein, totalFat, totalCarbs
-  };
 
   return (
     <div className="product-details-container">
@@ -96,21 +92,29 @@ const ProductDetails = ({ product }) => {
                 Белки, г:{" "}
                 {`..............................${
                   showCaloriesCalculator
-                    ? totalProtein.toFixed(1)
+                    ? isNaN(totalProtein)
+                      ? "0.0"
+                      : totalProtein.toFixed(1)
                     : product.protein
                 }`}
               </li>
               <li className="nutrition-item">
                 Жиры, г:{" "}
                 {`...............................${
-                  showCaloriesCalculator ? totalFat.toFixed(1) : product.fat
+                  showCaloriesCalculator
+                    ? isNaN(totalFat)
+                      ? "0.0"
+                      : totalFat.toFixed(1)
+                    : product.fat
                 }`}
               </li>
               <li className="nutrition-item">
                 Углеводы, г:{" "}
                 {`........................${
                   showCaloriesCalculator
-                    ? totalCarbs.toFixed(1)
+                    ? isNaN(totalCarbs)
+                      ? "0.0"
+                      : totalCarbs.toFixed(1)
                     : product.carbohydrates
                 }`}
               </li>
