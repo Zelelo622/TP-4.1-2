@@ -15,6 +15,22 @@ a:hover {
   color: #000;
 }
 
+.button {
+  font-weight: 500;
+  font-size: 20px;
+  background-color: #4acd29;
+  border-radius: 10px;
+  border: none;
+  padding: 7px 34px;
+  color: #fff;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  white-space: nowrap;
+}
+.button:hover {
+  opacity: 0.8;
+}
+
 .logo {
   font-weight: 700;
   font-size: 18px;

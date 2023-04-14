@@ -1,13 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { PRODUCT } from "../../utils/consts";
+import { handleAddToCart } from "../../utils/cartUtils";
 
 const ProductCard = ({ product }) => {
-  const handleAddToCart = (product) => {
-    const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-    cartItems.push(product);
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
-  };
 
   return (
     <Link to={PRODUCT + "/" + product.name}>

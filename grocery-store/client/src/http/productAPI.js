@@ -11,3 +11,8 @@ export const fetchProductByCategory = async (categoryId, filters, page, limit) =
   const { data } = await $host.get(`api/product${query}`);
   return data;
 }
+
+export const fetchOneProduct = async (name) => {
+  const { data } = await $host.get('api/product/' + name);
+  return data;
+}
