@@ -1,4 +1,4 @@
-.product-details-container {
+/* .product-details-container {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -76,4 +76,183 @@
 
 .nutrition-item {
   margin-bottom: 5px;
+} */
+
+/* ------------------------------------------- */
+
+/* .product-details-container {
+  display: flex;
 }
+
+.product-image {
+  width: 50%;
+  padding: 10px;
+}
+
+.product-image img {
+  max-width: 100%;
+  height: auto;
+}
+
+.product-info {
+  width: 50%;
+  padding: 10px;
+}
+
+.product-title {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.product-cart {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.product-price {
+  font-size: 20px;
+}
+
+.add-to-cart-btn {
+  font-size: 18px;
+  padding: 10px 20px;
+  background-color: #008080;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-to-cart-btn:hover {
+  background-color: #006666;
+}
+
+.product-description {
+  font-size: 18px;
+}
+
+.product-comp {
+  margin-bottom: 10px;
+}
+
+.comp-title {
+  font-weight: bold;
+}
+
+.nutrition-title {
+  font-weight: bold;
+}
+
+.nutrition-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nutrition-item {
+  margin-bottom: 5px;
+}
+ */
+
+.product-details-container {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 400;
+  display: flex;
+  justify-content: space-between;
+}
+
+.product-image {
+  width: 100%;
+  max-width: 450px;
+  margin-right: 140px;
+}
+
+.product-image img {
+  width: 100%;
+  height: auto;
+}
+
+.product-info {
+  width: 100%;
+}
+
+.product-title {
+  font-size: 40px;
+  margin-bottom: 30px;
+}
+
+.product-cart {
+  display: flex;
+  align-items: center;
+  margin-bottom: 60px;
+}
+
+.product-price {
+  font-weight: 500;
+  font-size: 27px;
+  margin-right: 38px;
+}
+
+.add-to-cart-btn {
+}
+
+.product-description {
+}
+
+.product-comp,
+.product-nutrition {
+  margin-bottom: 30px;
+}
+
+.product-calc {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.comp-title {
+  font-weight: 600;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.nutrition-title {
+  font-weight: 600;
+  font-size: 20px;
+  margin-bottom: 0;
+  margin-right: 30px;
+}
+
+.comp-text {
+  font-size: 18px;
+}
+
+.nutrition-list {
+}
+
+.nutrition-item {
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+.nutrition-item:last-child {
+  margin-bottom: 0;
+}
+
+/* @media only screen and (max-width: 768px) {
+  .product-details-container {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .product-image {
+    margin-right: 40px;
+  }
+
+  .product-info {
+    align-items: flex-start;
+    margin-top: 40px;
+  }
+} */
