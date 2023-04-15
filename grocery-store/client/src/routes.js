@@ -3,12 +3,14 @@ import Home from "./pages/Home";
 import Products from "./pages/Products";
 import Product from "./pages/Product";
 import {
+  CART,
   HOME,
   LOGIN_ROUTE,
   PRODUCT,
   PRODUCTS,
   REGISTRATION_ROUTE,
 } from "./utils/consts";
+import Cart from "./pages/Cart";
 
 export const authRoutes = [];
 
@@ -32,5 +34,9 @@ export const publicRoutes = [
   {
     path: PRODUCT + "/:name",
     Component: Product,
+  },
+  {
+    path: CART,
+    Component: Cart
   },
 ];
