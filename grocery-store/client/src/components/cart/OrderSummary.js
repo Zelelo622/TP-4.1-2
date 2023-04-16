@@ -12,7 +12,7 @@ const OrderSummary = ({ totalQuantity, totalPrice }) => {
         <div className="order-summary__title">Итого:</div>
         <div className="order-summary__value">{totalPrice.toFixed(2)} ₽</div>
       </div>
-      <button className="order-summary__button">Продолжить оформление</button>
+      <button className="order-summary__button button">Продолжить оформление</button>
     </div>
   );
 };

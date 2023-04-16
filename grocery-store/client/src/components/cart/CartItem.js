@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import CrossSvg from "../../assets/img/icon/cross.svg";
 
 const CartItem = ({
   product,
@@ -28,22 +29,24 @@ const CartItem = ({
   return (
     <div className="cart-item">
       <img
-        className="cart-img"
+        className="cart-item__img"
         src={process.env.REACT_APP_API_URL + product.img}
         alt={product.name}
       />
-      <h3 className="cart-title">{product.name}</h3>
-      <p className="cart-text">Цена: {product.price} ₽</p>
-      <button onClick={handleRemove}>Удалить товар</button>
-      <div className="cart-quantity">
-        <button className="cart-quan-btn" onClick={handleDecrease}>
+      <h3 className="cart-item__name">{product.name}</h3>
+      <div className="cart-item__quantity">
+        <button className="cart-item__btn btn-min" onClick={handleDecrease}>
           -
         </button>
-        <span>{product.quantity}</span>
-        <button className="cart-quan-btn" onClick={handleIncrease}>
+        <span>{product.quantity} шт.</span>
+        <button className="cart-item__btn btn-plus" onClick={handleIncrease}>
           +
         </button>
       </div>
+      <p className="cart-item__text">{product.price} ₽</p>
+      <button className="cart-item__btn-remove" onClick={handleRemove}>
+        <img src={CrossSvg} alt="Удалить товар" />
+      </button>
     </div>
   );
 };

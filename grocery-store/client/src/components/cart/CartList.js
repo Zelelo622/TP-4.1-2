@@ -8,7 +8,7 @@ const CartList = ({
   increaseProduct,
 }) => {
   return (
-    <div>
+    <div className="cart__list">
       {products.map((product) => (
         <CartItem
           key={product.id}

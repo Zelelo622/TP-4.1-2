@@ -70,27 +70,25 @@ const Cart = () => {
         <Header />
 
         <main className="main">
-          <div className="home">
+          <div className="cart">
             <Container>
-              <div className="cart-list">
-                <h2>Коризина</h2>
-                {/* <div>TODO ссылк</div> */}
-                <div>
-                  {cartItems.length === 0 ? (
-                    <p>Корзина пуста</p>
-                  ) : (
-                    <CartList
-                      products={cartItems}
-                      removeFromCart={handleRemoveFromCart}
-                      decreaseProduct={handleDecrease}
-                      increaseProduct={handleIncrease}
-                    />
-                  )}
-                  <OrderSummary
-                    totalQuantity={totalQuantity}
-                    totalPrice={totalPrice}
+              <h2 className="cart__title">Коризина</h2>
+              {/* <div>TODO ссылк</div> */}
+              <div className="cart__inner">
+                {cartItems.length === 0 ? (
+                  <p className="cart__text">Корзина пустая</p>
+                ) : (
+                  <CartList
+                    products={cartItems}
+                    removeFromCart={handleRemoveFromCart}
+                    decreaseProduct={handleDecrease}
+                    increaseProduct={handleIncrease}
                   />
-                </div>
+                )}
+                <OrderSummary
+                  totalQuantity={totalQuantity}
+                  totalPrice={totalPrice}
+                />
               </div>
             </Container>
           </div>

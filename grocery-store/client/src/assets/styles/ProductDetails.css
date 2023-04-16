@@ -1,6 +1,4 @@
 .product-details-container {
-  font-family: "Open Sans", sans-serif;
-  font-weight: 400;
   display: flex;
   justify-content: space-between;
 }
