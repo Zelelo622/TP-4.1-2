@@ -1,6 +1,4 @@
 .page-container {
-  font-family: "Open Sans", sans-serif;
-  font-weight: 400;
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -20,6 +18,8 @@
 }
 
 .login-container {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 400;
   border: 1px solid #ccc;
   border-radius: 15px;
   padding: 62px 47px 24px 35px;
@@ -29,7 +29,7 @@
 
 .login-header {
   font-weight: 700;
-  font-size: 31px;
+  font-size: 32px;
   line-height: 36px;
   margin-bottom: 62px;
 }
