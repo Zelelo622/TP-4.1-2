@@ -12,6 +12,8 @@ import {
 import CartList from "../components/cart/CartList";
 import "../assets/styles/Cart.css";
 import OrderSummary from "../components/cart/OrderSummary";
+import { HOME } from "../utils/consts";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState(
@@ -72,8 +74,13 @@ const Cart = () => {
         <main className="main">
           <div className="cart">
             <Container>
-              <h2 className="cart__title">Коризина</h2>
-              {/* <div>TODO ссылк</div> */}
+              <div className="cart__header">
+                <h2 className="cart__title">Коризина</h2>
+                <div className="cart__nav">
+                  <Link className="cart__nav-item" to={HOME}>Вернуться к покупкам</Link>
+                  <button className="cart__nav-item" onClick={handleClearCart}>Очистить корзину</button>
+                </div>
+              </div>
               <div className="cart__inner">
                 {cartItems.length === 0 ? (
                   <p className="cart__text">Корзина пустая</p>

@@ -72,7 +72,7 @@ const Products = observer(() => {
         <Header />
         <main className="main">
           <Container>
-            <Row className="mt-2">
+            <Row>
               <div className="products">
                 <div>
                   <Filter onFilterChange={onFilterChange} />
