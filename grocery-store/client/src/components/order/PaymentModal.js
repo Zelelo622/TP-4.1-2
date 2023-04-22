@@ -1,7 +1,13 @@
 import React from "react";
 import { Modal, Form, Button } from "react-bootstrap";
+import { createOrder } from "../../http/orderAPI";
 
-const PaymentModal = ({ showPaymentModal, onClose, onPaymentSubmit }) => {
+const PaymentModal = ({
+  showPaymentModal,
+  onClose,
+  onPaymentSubmit,
+  onCreateOrderRequest,
+}) => {
   return (
     <Modal show={showPaymentModal} onHide={onClose}>
       <Modal.Header closeButton>
@@ -27,7 +33,13 @@ const PaymentModal = ({ showPaymentModal, onClose, onPaymentSubmit }) => {
         <Button variant="secondary" onClick={onClose}>
           Закрыть
         </Button>
-        <Button variant="primary" onClick={onPaymentSubmit}>
+        <Button
+          variant="primary"
+          onClick={() => {
+            onPaymentSubmit();
+            onCreateOrderRequest();
+          }}
+        >
           Оплатить
         </Button>
       </Modal.Footer>

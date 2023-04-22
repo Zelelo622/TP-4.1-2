@@ -30,60 +30,26 @@ const Order = () => {
     setShowSuccessModal(true);
   };
 
-  const handleOrderSubmit = async () => {
+  const createOrderRequest = () => {
     try {
-      if (!paymentMethod) {
-        setShowErrorMessage(true);
-        return;
-      }
-
-      const newOrder = await createOrder(
-        user.user.id,
-        address,
-        cartItems,
-        totalPrice,
-        totalQuantity
-      );
-
-      if (paymentMethod === "cash") {
-        deleteInfoCart();
-      }
-
-      setShowSuccessModal(true);
+      createOrder(user.user.id, address, cartItems, totalPrice, totalQuantity);
+      deleteInfoCart();
     } catch (error) {
       console.log("Ошибка при оформлении заказа:", error.message);
-
-      if (error.response.status === 400) {
-        setShowErrorMessage(true);
-      }
     }
-
-    setOrderSubmitted(true);
   };
 
-  // const handleOrderSubmit = () => {
-  //   if (paymentMethod === "cash") {
-  //     try {
-  //       setShowSuccessModal(true);
-  //       createOrder(user.user.id, address, cartItems, totalPrice, totalQuantity);
-  //     } catch (error) {
-  //       console.log("Ошибка при оформлении заказа:", error.message);
-  //     }
-  //     deleteInfoCart();
-  //   } else if (paymentMethod === "") {
-  //     setShowErrorMessage(true);
-  //   } else {
-  //     try {
-  //       setShowSuccessModal(false);
-  //       setShowPaymentModal(true);
-  //       createOrder(user.id, address, cartItems, totalPrice, totalQuantity);
-  //     } catch (error) {
-  //       console.log("Ошибка при оформлении заказа:", error.message);
-  //     }
-  //     deleteInfoCart();
-  //   }
-  //   setOrderSubmitted(true);
-  // };
+  const handleOrderSubmit = () => {
+    if (paymentMethod === "cash") {
+      createOrderRequest();
+    } else if (paymentMethod === "") {
+      setShowErrorMessage(true);
+    } else {
+      setShowSuccessModal(false);
+      setShowPaymentModal(true);
+    }
+    setOrderSubmitted(true);
+  };
 
   return (
     <>
@@ -125,6 +91,7 @@ const Order = () => {
                 showPaymentModal={showPaymentModal}
                 onClose={() => setShowPaymentModal(false)}
                 onPaymentSubmit={handlePaymentSubmit}
+                onCreateOrderRequest={createOrderRequest}
               />
 
               <SuccessModal
