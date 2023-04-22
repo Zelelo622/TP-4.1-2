@@ -7,6 +7,7 @@ const User = sequelize.define('user', {
     second_name: {type: DataTypes.STRING, allowNull: false},
     phone: {type: DataTypes.STRING, unique: true, allowNull: false},
     password: {type: DataTypes.STRING, allowNull: false},
+    secret_word: {type: DataTypes.STRING, allowNull: false},
     role: {type: DataTypes.STRING, defaultValue: "USER"}
 });
 
@@ -35,11 +36,22 @@ const Orders = sequelize.define('orders', {
     address: {type: DataTypes.STRING, allowNull: false},
     status: {type: DataTypes.STRING, allowNull: false},
     amount: {type: DataTypes.FLOAT(10, 2), allowNull: false},
+    userId: {type: DataTypes.INTEGER, allowNull: false},
+    courier_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+            model: 'users',
+            key: 'id',
+        },
+        onDelete: 'SET NULL',
+        foreignKey: { name: 'fk_courier_id' }
+    }
 });
 
 const OrdersProduct = sequelize.define('orders_product', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    price: {type: DataTypes.INTEGER, allowNull: false}
+    quantity: { type: DataTypes.INTEGER, allowNull: false }
 });
 
 User.hasMany(Orders);
