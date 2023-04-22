@@ -6,13 +6,20 @@ import {
   CART,
   HOME,
   LOGIN_ROUTE,
+  ORDER,
   PRODUCT,
   PRODUCTS,
   REGISTRATION_ROUTE,
 } from "./utils/consts";
 import Cart from "./pages/Cart";
+import Order from "./pages/Order";
 
-export const authRoutes = [];
+export const authRoutes = [
+  {
+      path: ORDER,
+      Component: Order,
+  }
+]
 
 export const publicRoutes = [
   {
