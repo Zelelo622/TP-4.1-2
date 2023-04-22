@@ -29,6 +29,7 @@ const Auth = observer(() => {
       user.setUser(data);
       user.setIsAuth(true);
       navigate(HOME);
+      window.location.reload();
     } catch (e) {
       alert(e.response.data.message);
     }
