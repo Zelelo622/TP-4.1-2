@@ -24,18 +24,29 @@ const OrderSummary = ({ totalQuantity, totalPrice }) => {
           <div className="order-summary__value">{totalPrice.toFixed(2)} ₽</div>
         </div>
         <div className="order-summary__btn-cont">
-          {user.isAuth ? (
-            <Link to={ORDER} className="order-summary__button button">
-              Продолжить оформление
-            </Link>
+          {totalQuantity > 0 ? (
+            user.isAuth ? (
+              <Link to={ORDER} className="order-summary__button button">
+                Продолжить оформление
+              </Link>
+            ) : (
+              <button
+                variant="primary"
+                className="order-summary__button button"
+                onClick={handleShow}
+              >
+                Продолжить оформление
+              </button>
+            )
           ) : (
             <button
-              variant="primary"
-              className="order-summary__button button"
-              onClick={handleShow}
-            >
-              Продолжить оформление
-            </button>
+                variant="primary"
+                className="order-summary__button button"
+                onClick={handleShow}
+                disabled={true}
+              >
+                Продолжить оформление
+              </button>
           )}
         </div>
       </div>
@@ -47,8 +58,12 @@ const OrderSummary = ({ totalQuantity, totalPrice }) => {
           </p>
         </Modal.Body>
         <Modal.Footer>
-          <Link className="modal-link button" to={REGISTRATION_ROUTE}>Зарегистрироваться</Link>
-          <Link className="modal-link modal-link-blue button" to={LOGIN_ROUTE}>Авторизоваться</Link>
+          <Link className="modal-link button" to={REGISTRATION_ROUTE}>
+            Зарегистрироваться
+          </Link>
+          <Link className="modal-link modal-link-blue button" to={LOGIN_ROUTE}>
+            Авторизоваться
+          </Link>
         </Modal.Footer>
       </Modal>
     </div>

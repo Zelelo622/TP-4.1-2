@@ -65,18 +65,34 @@ export const increaseProduct = (cartItems, productId, newQuantity) => {
 };
 
 export const removeFromCart = (cartItems, productId) => {
-  const newCartItems = cartItems.filter((item) => item.id !== productId);
-  localStorage.setItem("cartItems", JSON.stringify(newCartItems));
-  return newCartItems;
+  const itemToRemove = cartItems.find((item) => item.id === productId);
+
+  if (itemToRemove) {
+    const newCartItems = cartItems.filter((item) => item.id !== productId);
+    const totalQuantity = newCartItems.reduce(
+      (acc, item) => acc + item.quantity,
+      0
+    );
+    const totalPrice = newCartItems.reduce(
+      (acc, item) => acc + item.price * item.quantity,
+      0
+    );
+
+    localStorage.setItem("cartItems", JSON.stringify(newCartItems));
+    localStorage.setItem("totalQuantity", totalQuantity);
+    localStorage.setItem("totalPrice", totalPrice);
+
+    return newCartItems;
+  } else {
+    return cartItems;
+  }
 };
+
+
 
 export const clearCart = () => {
-  localStorage.removeItem("cartItems");
-  return [];
-};
-
-export const deleteInfoCart = () => {
-  localStorage.removeItem("cartItems");
+  localStorage.setItem("cartItems", JSON.stringify([]));
   localStorage.removeItem("totalPrice");
   localStorage.removeItem("totalQuantity");
+  return [];
 };

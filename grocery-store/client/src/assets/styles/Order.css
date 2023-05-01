@@ -1,0 +1,9 @@
+.order-input {
+  width: 400px;
+}
+
+@media (max-width: 520px) {
+  .order-input {
+    width: 100%;
+  }
+}
