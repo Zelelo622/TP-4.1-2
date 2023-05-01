@@ -1,15 +1,14 @@
 const { Orders, OrdersProduct, Product } = require("../models/models");
+const addressValidator = require("../middleware/orderMiddleware")
 
 class OrderController {
-  // Создание заказа
-  async create(req, res) {
+  async create(req, res, next) {
     try {
       const { userId, address } = req.body;
       const cartItems = req.body.cartItems;
       const totalPrice = req.body.totalPrice;
       const totalQuantity = req.body.totalQuantity;
 
-      // Создаем заказ
       const order = await Orders.create({
         userId: userId,
         address: address,
@@ -17,7 +16,6 @@ class OrderController {
         amount: totalPrice,
       });
 
-      // Создаем записи в таблице orders_products
       for (let i = 0; i < cartItems.length; i++) {
         const cartItem = cartItems[i];
         const product = await Product.findByPk(cartItem.id);
@@ -31,24 +29,20 @@ class OrderController {
 
       res.json({ success: true, order: order });
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ success: false, message: error.message });
-    }
+        next(error);
+      }
   }
 
-  // Получение списка всех заказов
-  async getAll(req, res) {
+  async getAll(req, res, next) {
     try {
       const orders = await Orders.findAll({ include: OrdersProduct });
       res.json({ success: true, orders: orders });
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ success: false, message: error.message });
+      next(error);
     }
   }
 
-  // Получение информации о конкретном заказе
-  async getOne(req, res) {
+  async getOne(req, res, next) {
     try {
       const orderId = req.params.id;
       const order = await Orders.findByPk(orderId, { include: OrdersProduct });
@@ -58,13 +52,11 @@ class OrderController {
       }
       res.json({ success: true, order: order });
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ success: false, message: error.message });
+      next(error);
     }
   }
 
-  // Обновление информации о конкретном заказе
-  async update(req, res) {
+  async update(req, res, next) {
     try {
       const orderId = req.params.id;
       const status = req.body.status;
@@ -80,13 +72,11 @@ class OrderController {
 
       res.json({ success: true, order: order });
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ success: false, message: error.message });
+      next(error);
     }
   }
 
-  // Удаление конкретного заказа
-  async delete(req, res) {
+  async delete(req, res, next) {
     try {
       const orderId = req.params.id;
       const order = await Orders.findByPk(orderId);
@@ -105,8 +95,7 @@ class OrderController {
 
       res.json({ success: true });
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ success: false, message: error.message });
+      next(error);
     }
   }
 }
