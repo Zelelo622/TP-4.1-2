@@ -6,7 +6,8 @@ import PaymentModal from "../components/order/PaymentModal";
 import SuccessModal from "../components/order/SuccessModal";
 import { Context } from "..";
 import { createOrder } from "../http/orderAPI";
-import { deleteInfoCart } from "../utils/cartUtils";
+import { clearCart } from "../utils/cartUtils";
+import "../assets/styles/Order.css"
 
 const Order = () => {
   const { user } = useContext(Context);
@@ -30,10 +31,16 @@ const Order = () => {
     setShowSuccessModal(true);
   };
 
-  const createOrderRequest = () => {
+  const createOrderRequest = async () => {
     try {
-      createOrder(user.user.id, address, cartItems, totalPrice, totalQuantity);
-      deleteInfoCart();
+      await createOrder(
+        user.user.id,
+        address,
+        cartItems,
+        totalPrice,
+        totalQuantity
+      );
+      clearCart();
     } catch (error) {
       console.log("Ошибка при оформлении заказа:", error.message);
     }
@@ -59,23 +66,24 @@ const Order = () => {
           <div className="cart">
             <Container>
               <Form>
-                <Form.Group controlId="formAddress">
+                <Form.Group className="mb-4" controlId="formAddress">
                   <Form.Label>Адрес доставки</Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="Введите адрес доставки"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
+                    className="order-input"
                   />
                 </Form.Group>{" "}
-                <Form.Group controlId="formPaymentMethod">
+                <Form.Group className="mb-4" controlId="formPaymentMethod">
                   <Form.Label>Способ оплаты</Form.Label>
                   <Form.Control
                     as="select"
                     value={paymentMethod}
                     onChange={(e) => setPaymentMethod(e.target.value)}
                     className={
-                      orderSubmitted && paymentMethod === "" ? "is-invalid" : ""
+                      orderSubmitted && paymentMethod === "" ? "order-input is-invalid" : "order-input"
                     }
                   >
                     <option value="">Выберите способ оплаты</option>

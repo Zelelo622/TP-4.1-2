@@ -19,7 +19,7 @@ const SuccessModal = ({
       </Modal.Body>
       <Modal.Footer>
         <Button variant="primary" onClick={onClose}>
-          Закрыть
+          К заказам
         </Button>
       </Modal.Footer>
     </Modal>
