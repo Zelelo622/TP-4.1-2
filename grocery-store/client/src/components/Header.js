@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import "../assets/styles/Header.css";
 import { Container } from "react-bootstrap";
-import { HOME, LOGIN_ROUTE, CART } from "../utils/consts";
+import { HOME, LOGIN_ROUTE, CART, PROFILE } from "../utils/consts";
 import { Link, useLocation } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import { Context } from "..";
@@ -52,7 +52,7 @@ const Header = observer(() => {
                         </Link>
                       </li>
                       <li className="nav__item">
-                        <Link to="#!">
+                        <Link to={LOGIN_ROUTE}>
                           <img
                             src={ProfileSvg}
                             alt="Профиль"
@@ -69,7 +69,7 @@ const Header = observer(() => {
                         </Link>
                       </li>
                       <li className="nav__item">
-                        <Link to={LOGIN_ROUTE}>
+                        <Link to={PROFILE}>
                           <img
                             src={ProfileSvg}
                             alt="Профиль"
@@ -105,7 +105,7 @@ const Header = observer(() => {
                   <Link to={CART}>Корзина</Link>
                 </li>
                 <li>
-                  <Link to="#!">Профиль</Link>
+                  <Link to={LOGIN_ROUTE}>Войти</Link>
                 </li>
               </>
             ) : (
@@ -114,7 +114,7 @@ const Header = observer(() => {
                   <Link to={CART}>Корзина</Link>
                 </li>
                 <li>
-                  <Link to={LOGIN_ROUTE}>Войти</Link>
+                  <Link to={PROFILE}>Профиль</Link>
                 </li>
               </>
             )}
