@@ -47,10 +47,12 @@ const Order = () => {
   };
 
   const handleOrderSubmit = () => {
+    const trimmedAddress = address.trim();
     if (paymentMethod === "cash") {
-      if (address) {
+      if (trimmedAddress !== "") {
         createOrderRequest();
         setShowSuccessModal(true);
+        setShowErrorMessage(false);
       } else {
         setShowErrorMessage(true);
         setShowSuccessModal(false);
@@ -59,9 +61,10 @@ const Order = () => {
       setShowErrorMessage(true);
       setShowSuccessModal(false);
     } else {
-      if (address) {
+      if (trimmedAddress !== "") {
         setShowSuccessModal(false);
         setShowPaymentModal(true);
+        setShowErrorMessage(false);
       } else {
         setShowErrorMessage(true);
         setShowSuccessModal(false);
@@ -86,7 +89,8 @@ const Order = () => {
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                     className={
-                      orderSubmitted && address === ""
+                      orderSubmitted &&
+                      (address === "" || address.trim() === "")
                         ? "order-input is-invalid"
                         : "order-input"
                     }
