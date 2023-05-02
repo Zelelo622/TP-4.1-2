@@ -1,5 +1,6 @@
 import React from "react";
 import { Modal, Button } from "react-bootstrap";
+import { HOME } from "../../utils/consts";
 
 const SuccessModal = ({
   showSuccessModal,
@@ -18,9 +19,11 @@ const SuccessModal = ({
         <p>Статус заказа: Ожидает подтверждения</p>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="primary" onClick={onClose}>
-          К заказам
-        </Button>
+        <a href={HOME}>
+          <Button variant="primary" onClick={onClose}>
+            К заказам
+          </Button>
+        </a>
       </Modal.Footer>
     </Modal>
   );
