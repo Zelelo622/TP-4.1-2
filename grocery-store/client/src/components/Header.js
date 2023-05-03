@@ -44,7 +44,7 @@ const Header = observer(() => {
             <div className="header__right">
               <nav className="nav">
                 <ul className="nav__list">
-                  {isLogin ? (
+                  {user.isAuth ? (
                     <>
                       <li className="nav__item">
                         <Link to={CART}>
@@ -52,7 +52,7 @@ const Header = observer(() => {
                         </Link>
                       </li>
                       <li className="nav__item">
-                        <Link to={LOGIN_ROUTE}>
+                        <Link to={PROFILE + '/' + user.user.phone}>
                           <img
                             src={ProfileSvg}
                             alt="Профиль"
@@ -69,7 +69,7 @@ const Header = observer(() => {
                         </Link>
                       </li>
                       <li className="nav__item">
-                        <Link to={PROFILE}>
+                        <Link to={LOGIN_ROUTE}>
                           <img
                             src={ProfileSvg}
                             alt="Профиль"
@@ -99,13 +99,13 @@ const Header = observer(() => {
       <div className={`mobile-nav ${isMobileNavOpen ? "active" : ""}`}>
         <nav className="mobile-nav-list">
           <ul>
-            {isLogin ? (
+            {user.isAuth ? (
               <>
                 <li>
                   <Link to={CART}>Корзина</Link>
                 </li>
                 <li>
-                  <Link to={LOGIN_ROUTE}>Войти</Link>
+                  <Link to={PROFILE + '/' + user.user.phone}>Войти</Link>
                 </li>
               </>
             ) : (
@@ -114,7 +114,7 @@ const Header = observer(() => {
                   <Link to={CART}>Корзина</Link>
                 </li>
                 <li>
-                  <Link to={PROFILE}>Профиль</Link>
+                  <Link to={LOGIN_ROUTE}>Профиль</Link>
                 </li>
               </>
             )}

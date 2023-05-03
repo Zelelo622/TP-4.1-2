@@ -23,7 +23,7 @@ export const authRoutes = [
     Component: Order,
   },
   {
-    path: PROFILE,
+    path: PROFILE + "/:phone",
     Component: Profile,
   },
 ];
