@@ -8,6 +8,7 @@ const ProfileForm = ({ initialData, onSubmit, onCancel }) => {
   const [repeatNewPassword, setRepeatNewPassword] = useState("");
   const [passwordsMatch, setPasswordsMatch] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [showChangePassword, setShowChangePassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,6 +33,7 @@ const ProfileForm = ({ initialData, onSubmit, onCancel }) => {
     if (isEditingPassword && passwordsMatch) {
       onSubmit({ ...formData, password: newPassword });
       setIsEditingPassword(false);
+      setShowChangePassword(false);
       setNewPassword("");
       setRepeatNewPassword("");
       setPasswordsMatch(false);
@@ -43,6 +45,14 @@ const ProfileForm = ({ initialData, onSubmit, onCancel }) => {
   const handleCancel = (e) => {
     e.preventDefault();
     onCancel();
+  };
+
+  const handleCancelChangePassword = (e) => {
+    e.preventDefault();
+    setShowChangePassword(false);
+    setNewPassword("");
+    setRepeatNewPassword("");
+    setPasswordsMatch(false);
   };
 
   return (
@@ -68,7 +78,7 @@ const ProfileForm = ({ initialData, onSubmit, onCancel }) => {
             onChange={handleChange}
           />
         </Form.Group>
-        {isEditingPassword ? (
+        {showChangePassword ? (
           <>
             <Form.Group className="profile__block-info">
               <span className="profile__title">Новый пароль:</span>
@@ -87,7 +97,7 @@ const ProfileForm = ({ initialData, onSubmit, onCancel }) => {
               )}
             </Form.Group>
             <Form.Group className="profile__block-info">
-              <span className="profile__title">Повторите пароль:</span>
+              <span className="profile__title">Повторите новый пароль:</span>
               <Form.Control
                 type="password"
                 placeholder="Повторите новый пароль"
@@ -102,23 +112,33 @@ const ProfileForm = ({ initialData, onSubmit, onCancel }) => {
                 </Form.Control.Feedback>
               )}
             </Form.Group>
+            <button
+              type="button"
+              className="profile__btn-link"
+              onClick={handleCancelChangePassword}
+            >
+              Отменить изменение пароля
+            </button>
           </>
         ) : (
-          <Form.Group className="profile__block-info">
-            <button
-              className="button profile__btn-link"
-              onClick={() => setIsEditingPassword(true)}
-            >
-              Изменить пароль
-            </button>
-          </Form.Group>
+          <button
+            type="button"
+            className="profile__btn-link"
+            onClick={() => setShowChangePassword(true)}
+          >
+            Изменить пароль
+          </button>
         )}
-        <div className="profile__block-btn">
-          <button className="button profile__btn-green" type="submit">
+        <div className="profile__buttons">
+          <button type="submit" className="button profile__btn-green">
             Сохранить
           </button>
-          <button className="button profile__btn-grey" onClick={handleCancel}>
-            Отмена
+          <button
+            type="button"
+            className="button profile__btn-grey"
+            onClick={handleCancel}
+          >
+            Отменить
           </button>
         </div>
       </Form>
