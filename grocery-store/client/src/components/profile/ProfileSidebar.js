@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { PROFILE, HISTORY_ORDER } from "../../utils/consts";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
+import { Context } from "../..";
+import { observer } from "mobx-react-lite";
 
-const ProfileSidebar = () => {
+const ProfileSidebar = observer(() => {
   const [activePage, setActivePage] = useState(PROFILE);
+  const { user } = useContext(Context);
 
   const handleLinkClick = (page) => {
     setActivePage(page);
@@ -11,26 +14,28 @@ const ProfileSidebar = () => {
 
   return (
     <div className="profile__sidebar">
-      <Link
-        to={PROFILE}
-        onClick={() => handleLinkClick(PROFILE)}
-        className={`profile__sidebar-link ${
-          activePage === PROFILE ? "profile__sidebar-green" : ""
-        }`}
+      <NavLink
+        to={PROFILE + "/" + user.user.phone}
+        className={({ isActive }) =>
+          isActive
+            ? "profile__sidebar-link profile__sidebar-green"
+            : "profile__sidebar-link"
+        }
       >
         Профиль
-      </Link>
-      <Link
-        to={HISTORY_ORDER}
-        onClick={() => handleLinkClick(HISTORY_ORDER)}
-        className={`profile__sidebar-link ${
-          activePage === HISTORY_ORDER ? "profile__sidebar-green" : ""
-        }`}
+      </NavLink>
+      <NavLink
+        to={HISTORY_ORDER + "/" + user.user.phone}
+        className={({ isActive }) =>
+          isActive
+            ? "profile__sidebar-link profile__sidebar-green"
+            : "profile__sidebar-link"
+        }
       >
         Заказы
-      </Link>
+      </NavLink>
     </div>
   );
-};
+});
 
 export default ProfileSidebar;

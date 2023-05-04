@@ -11,3 +11,8 @@ export const createOrder = async (userId, address, cartItems, totalPrice, totalQ
     });
     return data;
 }
+
+export const fetchOneOrder = async (phone) => {
+    const { data } = await $authHost.get(`api/order/${phone}`);
+    return data;
+  };

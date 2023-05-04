@@ -16,6 +16,7 @@ import {
 import Cart from "./pages/Cart";
 import Order from "./pages/Order";
 import Profile from "./pages/Profile";
+import HistoryOrder from "./pages/HistoryOrder";
 
 export const authRoutes = [
   {
@@ -26,6 +27,10 @@ export const authRoutes = [
     path: PROFILE + "/:phone",
     Component: Profile,
   },
+  {
+    path: HISTORY_ORDER + "/:phone",
+    Component: HistoryOrder,
+  }
 ];
 
 export const publicRoutes = [
