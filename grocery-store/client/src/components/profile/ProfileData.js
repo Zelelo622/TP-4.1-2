@@ -1,13 +1,15 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Context } from "../..";
 import { observer } from "mobx-react-lite";
 import { useNavigate } from "react-router-dom";
 import { HOME } from "../../utils/consts";
 import { deleteUser } from "../../http/userAPI";
+import { Button, Modal } from "react-bootstrap";
 
 const ProfileData = observer(({ userData, onEdit }) => {
   const { user } = useContext(Context);
   const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
 
   const logOut = () => {
     user.setUser({});
@@ -16,12 +18,20 @@ const ProfileData = observer(({ userData, onEdit }) => {
     navigate(HOME);
   };
 
-  const handleDelete = async () => {
+  const handleDeleteAccount = async () => {
     await deleteUser(userData.phone);
     user.setUser({});
     user.setIsAuth(false);
     localStorage.removeItem("token");
     navigate(HOME);
+  };
+
+  const handleShowModal = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
   };
 
   return (
@@ -49,12 +59,22 @@ const ProfileData = observer(({ userData, onEdit }) => {
         <button className="button profile__btn-grey" onClick={() => logOut()}>
           Выйти
         </button>
-        <button
-          className="button profile__btn-red"
-          onClick={() => handleDelete()}
-        >
+        <button className="button profile__btn-red" onClick={handleShowModal}>
           Удалить аккаунт
         </button>
+        <Modal show={showModal} onHide={handleCloseModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Вы точно хотите удалить аккаунт?</Modal.Title>
+          </Modal.Header>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseModal}>
+              Нет
+            </Button>
+            <Button variant="primary" onClick={handleDeleteAccount}>
+              Да
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     </div>
   );
