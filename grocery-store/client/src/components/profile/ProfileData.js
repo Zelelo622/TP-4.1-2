@@ -46,14 +46,14 @@ const ProfileData = observer(({ userData, onEdit }) => {
         <button className="button profile__btn-green" onClick={onEdit}>
           Редактировать
         </button>
+        <button className="button profile__btn-grey" onClick={() => logOut()}>
+          Выйти
+        </button>
         <button
           className="button profile__btn-red"
           onClick={() => handleDelete()}
         >
           Удалить аккаунт
-        </button>
-        <button className="button profile__btn-grey" onClick={() => logOut()}>
-          Выйти
         </button>
       </div>
     </div>

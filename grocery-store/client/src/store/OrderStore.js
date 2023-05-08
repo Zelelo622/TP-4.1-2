@@ -2,15 +2,15 @@ import { makeAutoObservable } from "mobx";
 
 export default class OrderStore {
   constructor() {
-    this._order = [];
+    this._orders = [];
     this._page = 1;
     this._totalCount = 0;
     this._limit = 3;
     makeAutoObservable(this);
   }
 
-  setProducts(order) {
-    this._order = order;
+  setOrders(orders) {
+    this._orders = orders;
   }
 
   setPage(page) {
@@ -20,8 +20,8 @@ export default class OrderStore {
     this._totalCount = count;
   }
 
-  get order() {
-    return this._order;
+  get orders() {
+    return this._orders;
   }
   get totalCount() {
     return this._totalCount;

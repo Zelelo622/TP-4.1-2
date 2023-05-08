@@ -69,7 +69,10 @@
 }
 
 .profile__btn-red {
-  background-color: #c40000;
+  font-size: 16px;
+  color: #c40000;
+  background-color: transparent;
+  padding: 0;
 }
 
 .profile__btn-grey {
@@ -135,7 +138,7 @@
   }
 
   .profile__btn-red {
-    font-size: 16px;
+    font-size: 12px;
     padding: 7px 24px;
   }
 

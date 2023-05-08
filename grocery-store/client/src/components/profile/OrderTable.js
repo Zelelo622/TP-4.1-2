@@ -1,11 +1,24 @@
-import React from "react";
-import { Table } from "react-bootstrap";
+import React, { useContext, useState } from "react";
+import { Table, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import { HISTORY_ORDER } from "../../utils/consts";
 import "../../assets/styles/Tables.css";
+import { observer } from "mobx-react-lite";
+import { Context } from "../..";
 
-const OrderTable = ({ orders }) => {
+const OrderTable = observer(() => {
+  const { order } = useContext(Context);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [tooltipText, setTooltipText] = useState("");
+
+  const handleTooltipClick = (text) => {
+    setShowTooltip(!showTooltip);
+    setTooltipText(text);
+  };
+
+  const startIndex = (order.page - 1) * order.limit;
+
   return (
     <>
       <Table className="table-order">
@@ -20,9 +33,9 @@ const OrderTable = ({ orders }) => {
           </tr>
         </thead>
         <tbody>
-          {orders.map((order, index) => (
+          {order.orders.map((order, index) => (
             <tr key={order.id} className="table-order__row">
-              <td className="table-order__data">{index + 1}</td>
+              <td className="table-order__data">{startIndex + index + 1}</td>
               <td className="table-order__data">
                 <Link
                   to={HISTORY_ORDER + "/" + order.id}
@@ -31,7 +44,15 @@ const OrderTable = ({ orders }) => {
                   Посмотреть список
                 </Link>
               </td>
-              <td className="table-order__data table-order__data--address">{order.address}</td>
+              <td className="table-order__data table-order__data--address">
+                <OverlayTrigger
+                  trigger="click"
+                  placement="top"
+                  overlay={<Tooltip>{order.address}</Tooltip>}
+                >
+                  <span>{order.address}</span>
+                </OverlayTrigger>
+              </td>
               <td className="table-order__data">
                 {moment(order.createdAt).format("DD.MM.YY")}
               </td>
@@ -43,6 +64,6 @@ const OrderTable = ({ orders }) => {
       </Table>
     </>
   );
-};
+});
 
 export default OrderTable;

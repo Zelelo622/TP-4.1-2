@@ -1,4 +1,3 @@
-import axios from "axios";
 import { $authHost, $host } from "./index";
 
 export const createOrder = async (
@@ -19,8 +18,7 @@ export const createOrder = async (
 };
 
 export const fetchOneOrder = async (phone, page, limit) => {
-  const { data } = await $authHost.get(
-    `api/order/${phone}?&page=${page}&limit=${limit}`
-  );
+  const query = `?page=${page}&limit=${limit}`;
+  const { data } = await $authHost.get(`api/order/${phone}${query}`);
   return data;
 };
