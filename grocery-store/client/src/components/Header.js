@@ -105,7 +105,7 @@ const Header = observer(() => {
                   <Link to={CART}>Корзина</Link>
                 </li>
                 <li>
-                  <Link to={PROFILE + '/' + user.user.phone}>Войти</Link>
+                  <Link to={PROFILE + '/' + user.user.phone}>Профиль</Link>
                 </li>
               </>
             ) : (
@@ -114,7 +114,7 @@ const Header = observer(() => {
                   <Link to={CART}>Корзина</Link>
                 </li>
                 <li>
-                  <Link to={LOGIN_ROUTE}>Профиль</Link>
+                  <Link to={LOGIN_ROUTE}>Войти</Link>
                 </li>
               </>
             )}

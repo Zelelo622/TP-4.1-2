@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Header from "../components/Header";
 import { Container } from "react-bootstrap";
 import ProfileSidebar from "../components/profile/ProfileSidebar";
@@ -6,16 +6,20 @@ import Footer from "../components/Footer";
 import { fetchOneOrder } from "../http/orderAPI";
 import { useParams } from "react-router-dom";
 import OrderTable from "../components/profile/OrderTable";
+import { observer } from "mobx-react-lite";
+import { Context } from "..";
+// import PageOrder from "../components/profile/PageOrder";
 
-const HistoryOrder = () => {
+const HistoryOrder = observer(() => {
   const { phone } = useParams();
   const [userOrder, setUserOrder] = useState([]);
+  const { order } = useContext(Context);
 
   useEffect(() => {
-    fetchOneOrder(phone).then((data) => {
+    fetchOneOrder(phone, order.page, 3).then((data) => {
       setUserOrder(data);
     });
-  }, [phone]);
+  }, [phone, order.page]);
 
   return (
     <>
@@ -32,6 +36,7 @@ const HistoryOrder = () => {
                 ) : (
                   <p className="order__text">Вы не делали заказов</p>
                 )}
+                {/* <PageOrder /> */}
               </div>
             </Container>
           </div>
@@ -41,6 +46,6 @@ const HistoryOrder = () => {
       </div>
     </>
   );
-};
+});
 
 export default HistoryOrder;

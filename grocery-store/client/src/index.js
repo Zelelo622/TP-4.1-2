@@ -5,6 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import UserStore from './store/UserStore';
 import CategoryStore from './store/CategoryStore';
 import ProductStore from './store/ProductsStore';
+import OrderStore from './store/OrderStore';
 
 export const Context = createContext(null);
 
@@ -13,7 +14,8 @@ root.render(
   <Context.Provider value={{
     user: new UserStore(),
     category: new CategoryStore(),
-    product: new ProductStore()
+    product: new ProductStore(),
+    order: new OrderStore(),
   }}>
 
     <React.StrictMode>

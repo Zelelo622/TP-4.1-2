@@ -9,7 +9,7 @@ import Filter from "../components/product/Filter";
 import "../assets/styles/Products.css";
 import { Row, Col, Container } from "react-bootstrap";
 import ProductList from "../components/product/ProductList";
-import Pages from "../components/product/Pages";
+import PagesProduct from "../components/product/PagesProduct";
 
 const Products = observer(() => {
   const { product } = useContext(Context);
@@ -79,7 +79,7 @@ const Products = observer(() => {
                 </div>
                 <div>
                   <ProductList />
-                  <Pages />
+                  <PagesProduct />
                 </div>
               </div>
             </Row>

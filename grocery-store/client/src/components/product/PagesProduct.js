@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import { Context } from "../..";
 import { Pagination } from "react-bootstrap";
 
-const Pages = observer(() => {
+const PagesProduct = observer(() => {
   const { product } = useContext(Context);
   const pageCount = Math.ceil(product.totalCount / product.limit);
   const pages = [];
@@ -29,4 +29,4 @@ const Pages = observer(() => {
   );
 });
 
-export default Pages;
+export default PagesProduct;
