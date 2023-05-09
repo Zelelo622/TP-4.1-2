@@ -34,6 +34,8 @@ const ProfileData = observer(({ userData, onEdit }) => {
     setShowModal(false);
   };
 
+  const isCurrentUser = userData.phone === user.user.phone;
+
   return (
     <div className="profile__info">
       <div className="profile__block-info">
@@ -52,30 +54,32 @@ const ProfileData = observer(({ userData, onEdit }) => {
         <span className="profile__title">Пароль:</span>
         <span className="profile__descr">**********</span>
       </div>
-      <div className="profile__block-btn">
-        <button className="button profile__btn-green" onClick={onEdit}>
-          Редактировать
-        </button>
-        <button className="button profile__btn-grey" onClick={() => logOut()}>
-          Выйти
-        </button>
-        <button className="button profile__btn-red" onClick={handleShowModal}>
-          Удалить аккаунт
-        </button>
-        <Modal show={showModal} onHide={handleCloseModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>Вы точно хотите удалить аккаунт?</Modal.Title>
-          </Modal.Header>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseModal}>
-              Нет
-            </Button>
-            <Button variant="primary" onClick={handleDeleteAccount}>
-              Да
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      </div>
+      {isCurrentUser && (
+        <div className="profile__block-btn">
+          <button className="button profile__btn-green" onClick={onEdit}>
+            Редактировать
+          </button>
+          <button className="button profile__btn-grey" onClick={() => logOut()}>
+            Выйти
+          </button>
+          <button className="button profile__btn-red" onClick={handleShowModal}>
+            Удалить аккаунт
+          </button>
+          <Modal show={showModal} onHide={handleCloseModal}>
+            <Modal.Header closeButton>
+              <Modal.Title>Вы точно хотите удалить аккаунт?</Modal.Title>
+            </Modal.Header>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleCloseModal}>
+                Нет
+              </Button>
+              <Button variant="primary" onClick={handleDeleteAccount}>
+                Да
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </div>
+      )}
     </div>
   );
 });
