@@ -1,4 +1,5 @@
 const ApiError = require("../error/ApiError");
+const { Orders } = require("../models/models");
 
 const orderMiddleware = {
   addressValidator(req, res, next) {
@@ -29,6 +30,15 @@ const orderMiddleware = {
       return next(ApiError.badRequest("Неверная общая стоимость заказа"));
     }
 
+    next();
+  },
+
+  async checkOrderExists(req, res, next) {
+    const { id } = req.params;
+    const order = await Orders.findByPk(id);
+    if (!order) {
+      return next(ApiError.badRequest(`Заказ с id ${id} не найден`));
+    }
     next();
   },
 };
