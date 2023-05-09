@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import "../assets/styles/Header.css";
 import { Container } from "react-bootstrap";
-import { HOME, LOGIN_ROUTE, CART } from "../utils/consts";
+import { HOME, LOGIN_ROUTE, CART, PROFILE } from "../utils/consts";
 import { Link, useLocation } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import { Context } from "..";
@@ -44,7 +44,7 @@ const Header = observer(() => {
             <div className="header__right">
               <nav className="nav">
                 <ul className="nav__list">
-                  {isLogin ? (
+                  {user.isAuth ? (
                     <>
                       <li className="nav__item">
                         <Link to={CART}>
@@ -52,7 +52,7 @@ const Header = observer(() => {
                         </Link>
                       </li>
                       <li className="nav__item">
-                        <Link to="#!">
+                        <Link to={PROFILE + '/' + user.user.phone}>
                           <img
                             src={ProfileSvg}
                             alt="Профиль"
@@ -99,13 +99,13 @@ const Header = observer(() => {
       <div className={`mobile-nav ${isMobileNavOpen ? "active" : ""}`}>
         <nav className="mobile-nav-list">
           <ul>
-            {isLogin ? (
+            {user.isAuth ? (
               <>
                 <li>
                   <Link to={CART}>Корзина</Link>
                 </li>
                 <li>
-                  <Link to="#!">Профиль</Link>
+                  <Link to={PROFILE + '/' + user.user.phone}>Профиль</Link>
                 </li>
               </>
             ) : (

@@ -1,5 +1,12 @@
-const { Orders, OrdersProduct, Product } = require("../models/models");
-const addressValidator = require("../middleware/orderMiddleware")
+const {
+  Orders,
+  OrdersProduct,
+  Product,
+  User,
+  Category,
+} = require("../models/models");
+const addressValidator = require("../middleware/orderMiddleware");
+const jwt = require("jsonwebtoken");
 
 class OrderController {
   async create(req, res, next) {
@@ -12,7 +19,7 @@ class OrderController {
       const order = await Orders.create({
         userId: userId,
         address: address,
-        status: "pending",
+        status: "В обработке",
         amount: totalPrice,
       });
 
@@ -27,16 +34,16 @@ class OrderController {
         });
       }
 
-      res.json({ success: true, order: order });
+      res.json({ order: order });
     } catch (error) {
-        next(error);
-      }
+      next(error);
+    }
   }
 
   async getAll(req, res, next) {
     try {
       const orders = await Orders.findAll({ include: OrdersProduct });
-      res.json({ success: true, orders: orders });
+      res.json(orders);
     } catch (error) {
       next(error);
     }
@@ -44,13 +51,36 @@ class OrderController {
 
   async getOne(req, res, next) {
     try {
-      const orderId = req.params.id;
-      const order = await Orders.findByPk(orderId, { include: OrdersProduct });
-      if (!order) {
-        res.status(404).json({ success: false, message: "Order not found" });
-        return;
+      const { phone } = req.params;
+      let { limit, page } = req.query;
+      page = page || 1;
+      limit = limit || 9;
+      let offset = page * limit - limit;
+
+      const token = req.headers.authorization.split(" ")[1];
+      const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
+      const userId = decodedToken.id;
+      const user = await User.findOne({ where: { phone } });
+      if (!user) {
+        return res
+          .status(404)
+          .json({ message: `Пользователь c телефоном ${phone} не найден` });
       }
-      res.json({ success: true, order: order });
+
+      if (user.id !== userId) {
+        return res.status(401).json({
+          message: "Нет прав на изменение данных другого пользователя",
+        });
+      }
+
+      const orders = await Orders.findAndCountAll({
+        where: { userId: user.id },
+        include: OrdersProduct,
+        limit,
+        offset,
+      });
+
+      res.json(orders);
     } catch (error) {
       next(error);
     }
@@ -63,14 +93,14 @@ class OrderController {
 
       const order = await Orders.findByPk(orderId);
       if (!order) {
-        res.status(404).json({ success: false, message: "Order not found" });
+        res.status(404).json({ success: false, message: "Заказ не найден" });
         return;
       }
 
       order.status = status;
       await order.save();
 
-      res.json({ success: true, order: order });
+      res.json(order);
     } catch (error) {
       next(error);
     }
@@ -81,7 +111,7 @@ class OrderController {
       const orderId = req.params.id;
       const order = await Orders.findByPk(orderId);
       if (!order) {
-        res.status(404).json({ success: false, message: "Order not found" });
+        res.status(404).json({ message: "Заказ не найден" });
         return;
       }
 
@@ -94,6 +124,41 @@ class OrderController {
       await order.destroy();
 
       res.json({ success: true });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getProductsByOrderId(req, res, next) {
+    const { id } = req.params;
+
+    try {
+      const token = req.headers.authorization.split(" ")[1];
+      const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
+      const userId = decodedToken.id;
+
+      const order = await Orders.findByPk(id);
+
+      if (!order) {
+        return res.status(404).json({ message: "Заказ не найден" });
+      }
+
+      if (order.userId !== userId) {
+        return res.status(401).json({ message: "Нет прав на получение информации другого пользователя" });
+      }
+
+      const orderProducts = await OrdersProduct.findAll({
+        where: { orderId: id },
+        attributes: ["quantity"],
+        include: [
+          {
+            model: Product,
+            attributes: ["id", "name", "price", "img"],
+          },
+        ],
+      });
+
+      res.status(200).json(orderProducts);
     } catch (error) {
       next(error);
     }

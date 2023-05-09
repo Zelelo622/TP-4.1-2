@@ -4,22 +4,40 @@ import Products from "./pages/Products";
 import Product from "./pages/Product";
 import {
   CART,
+  HISTORY_ORDER,
   HOME,
   LOGIN_ROUTE,
   ORDER,
   PRODUCT,
   PRODUCTS,
+  PRODUCT_ORDER,
+  PROFILE,
   REGISTRATION_ROUTE,
 } from "./utils/consts";
 import Cart from "./pages/Cart";
 import Order from "./pages/Order";
+import Profile from "./pages/Profile";
+import HistoryOrder from "./pages/HistoryOrder";
+import ProductsOrder from "./pages/ProductsOrder";
 
 export const authRoutes = [
   {
-      path: ORDER,
-      Component: Order,
-  }
-]
+    path: ORDER,
+    Component: Order,
+  },
+  {
+    path: PROFILE + "/:phone",
+    Component: Profile,
+  },
+  {
+    path: HISTORY_ORDER + "/:phone",
+    Component: HistoryOrder,
+  },
+  {
+    path: PRODUCT_ORDER + "/:id",
+    Component: ProductsOrder,
+  },
+];
 
 export const publicRoutes = [
   {
@@ -44,6 +62,6 @@ export const publicRoutes = [
   },
   {
     path: CART,
-    Component: Cart
+    Component: Cart,
   },
 ];
