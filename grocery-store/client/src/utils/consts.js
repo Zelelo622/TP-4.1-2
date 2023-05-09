@@ -7,3 +7,4 @@ export const CART = "/cart";
 export const ORDER = "/order";
 export const PROFILE = "/profile";
 export const HISTORY_ORDER = "/history-order";
+export const PRODUCT_ORDER = "/product-order";

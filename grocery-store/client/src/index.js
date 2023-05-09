@@ -6,6 +6,7 @@ import UserStore from './store/UserStore';
 import CategoryStore from './store/CategoryStore';
 import ProductStore from './store/ProductsStore';
 import OrderStore from './store/OrderStore';
+import ProductOrderStore from './store/ProductOrderStore';
 
 export const Context = createContext(null);
 
@@ -16,6 +17,7 @@ root.render(
     category: new CategoryStore(),
     product: new ProductStore(),
     order: new OrderStore(),
+    productOrder: new ProductOrderStore(),
   }}>
 
     <React.StrictMode>

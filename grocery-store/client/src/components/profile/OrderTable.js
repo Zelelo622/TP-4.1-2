@@ -1,23 +1,27 @@
 import React, { useContext, useState } from "react";
-import { Table, Tooltip, OverlayTrigger } from "react-bootstrap";
+import { Table, Tooltip, OverlayTrigger, Modal, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import moment from "moment";
-import { HISTORY_ORDER } from "../../utils/consts";
+import { PRODUCT_ORDER } from "../../utils/consts";
 import "../../assets/styles/Tables.css";
 import { observer } from "mobx-react-lite";
 import { Context } from "../..";
+import { fetchOrderProducts } from "../../http/orderAPI";
+import ProductOrderList from "./ProductOrderList";
 
 const OrderTable = observer(() => {
   const { order } = useContext(Context);
-  const [showTooltip, setShowTooltip] = useState(false);
-  const [tooltipText, setTooltipText] = useState("");
+  const { productOrder } = useContext(Context);
+  // const [products, setProducts] = useState([]);
 
-  const handleTooltipClick = (text) => {
-    setShowTooltip(!showTooltip);
-    setTooltipText(text);
+  const handleViewProductsClick = async (orderId) => {
+    const products = await fetchOrderProducts(orderId);
+    productOrder.setProducts(products)
+    // setProducts(products);
   };
 
   const startIndex = (order.page - 1) * order.limit;
+  // console.log(products);
 
   return (
     <>
@@ -38,8 +42,9 @@ const OrderTable = observer(() => {
               <td className="table-order__data">{startIndex + index + 1}</td>
               <td className="table-order__data">
                 <Link
-                  to={HISTORY_ORDER + "/" + order.id}
+                  to={PRODUCT_ORDER + "/" + order.id}
                   className="table-order__link"
+                  onClick={() => handleViewProductsClick(order.id)}
                 >
                   Посмотреть список
                 </Link>

@@ -22,3 +22,8 @@ export const fetchOneOrder = async (phone, page, limit) => {
   const { data } = await $authHost.get(`api/order/${phone}${query}`);
   return data;
 };
+
+export const fetchOrderProducts = async (orderId) => {
+  const {data} = await $authHost.get(`/api/order/${orderId}/products`);
+  return data;
+}

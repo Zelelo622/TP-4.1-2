@@ -1,16 +1,11 @@
 import React, { useContext, useState } from "react";
 import { PROFILE, HISTORY_ORDER } from "../../utils/consts";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { Context } from "../..";
 import { observer } from "mobx-react-lite";
 
 const ProfileSidebar = observer(() => {
-  const [activePage, setActivePage] = useState(PROFILE);
   const { user } = useContext(Context);
-
-  const handleLinkClick = (page) => {
-    setActivePage(page);
-  };
 
   return (
     <div className="profile__sidebar">
