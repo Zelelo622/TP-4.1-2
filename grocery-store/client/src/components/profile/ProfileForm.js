@@ -30,7 +30,12 @@ const ProfileForm = ({ initialData, onSubmit, onCancel }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitted(true);
-    if (isEditingPassword && passwordsMatch) {
+    if (
+      isEditingPassword &&
+      newPassword &&
+      repeatNewPassword &&
+      passwordsMatch
+    ) {
       onSubmit({ ...formData, password: newPassword });
       setIsEditingPassword(false);
       setShowChangePassword(false);
@@ -85,7 +90,7 @@ const ProfileForm = ({ initialData, onSubmit, onCancel }) => {
               <Form.Control
                 type="password"
                 placeholder="Введите новый пароль"
-                name="new_password"
+                name="password"
                 value={newPassword}
                 onChange={handleNewPasswordChange}
                 className={isSubmitted && !passwordsMatch ? "is-invalid" : ""}
@@ -96,6 +101,7 @@ const ProfileForm = ({ initialData, onSubmit, onCancel }) => {
                 </Form.Control.Feedback>
               )}
             </Form.Group>
+
             <Form.Group className="profile__block-info">
               <span className="profile__title">Повторите новый пароль:</span>
               <Form.Control

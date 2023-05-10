@@ -13,12 +13,14 @@ import {
   PRODUCT_ORDER,
   PROFILE,
   REGISTRATION_ROUTE,
+  SEARCH_PRODUCTS,
 } from "./utils/consts";
 import Cart from "./pages/Cart";
 import Order from "./pages/Order";
 import Profile from "./pages/Profile";
 import HistoryOrder from "./pages/HistoryOrder";
 import ProductsOrder from "./pages/ProductsOrder";
+import SearchProducts from "./pages/SearchProducts";
 
 export const authRoutes = [
   {
@@ -51,6 +53,10 @@ export const publicRoutes = [
   {
     path: HOME,
     Component: Home,
+  },
+  {
+    path: SEARCH_PRODUCTS,
+    Component: SearchProducts,
   },
   {
     path: PRODUCTS + "/:categoryId",
