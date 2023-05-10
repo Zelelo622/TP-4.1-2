@@ -134,7 +134,6 @@ class UserController {
           .json({ message: `Пользователь c телефоном ${phone} не найден` });
       }
 
-      // Проверяем, что пользователь, пытающийся изменить данные, имеет право на это
       if (user.id !== userId) {
         return res.status(401).json({
           message: "Нет прав на изменение данных другого пользователя",
@@ -163,7 +162,7 @@ class UserController {
       return res.json({ token: newToken });
     } catch (e) {
       console.log(e);
-      res.status(400).json({ message: "Update user error" });
+      res.status(400).json({ message: "Ошибка обновления данных" });
     }
   }
 

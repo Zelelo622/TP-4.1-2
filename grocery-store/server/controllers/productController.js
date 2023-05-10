@@ -141,6 +141,52 @@ class ProductController {
     });
     return res.json(product);
   }
+
+  async search(req, res, next) {
+    try {
+      let { name, priceRange, isVegetarian, calRange, limit, page } = req.query;
+      page = page || 1;
+      limit = limit || 9;
+      let offset = page * limit - limit;
+      name = name.replace(/\s+$/, "") + "%";
+
+      const filter = {};
+
+      if (priceRange) {
+        const [priceMin, priceMax] = priceRange.split("-");
+        filter.price = {
+          [Op.between]: [priceMin, priceMax],
+        };
+      }
+
+      if (isVegetarian === "true") {
+        filter.vegetarian = true;
+      } else if (isVegetarian === "false") {
+        filter.vegetarian = false;
+      }
+
+      if (calRange) {
+        const [calMin, calMax] = calRange.split("-");
+        filter.calories = {
+          [Op.between]: [calMin, calMax],
+        };
+      }
+
+      const products = await Product.findAndCountAll({
+        where: {
+          name: {
+            [Op.iLike]: name,
+          },
+          ...filter,
+        },
+        limit,
+        offset,
+      });
+      res.status(200).json({ products });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new ProductController();
