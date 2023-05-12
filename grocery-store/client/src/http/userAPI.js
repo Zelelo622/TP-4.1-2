@@ -5,13 +5,17 @@ export const registration = async (
   first_name,
   second_name,
   phone,
-  password
+  password,
+  passwordConfirmation,
+  secret_word
 ) => {
   const { data } = await $host.post("api/user/registration", {
     first_name,
     second_name,
     phone,
     password,
+    passwordConfirmation,
+    secret_word,
   });
   localStorage.setItem("token", data.token);
   return jwt_decode(data.token);
@@ -26,6 +30,30 @@ export const login = async (phone, password) => {
 export const check = async () => {
   const { data } = await $authHost.get("api/user/auth");
   localStorage.setItem("token", data.token);
+  return jwt_decode(data.token);
+};
+
+export const verifyAccount = async (phone, secret_word) => {
+  const { data } = await $host.post("api/user/verify", { phone, secret_word });
+  localStorage.setItem("token", data.token);
+  return jwt_decode(data.token);
+};
+
+export const resetPassword = async (password, passwordConfirmation) => {
+  const token = localStorage.getItem("token"); // получаем токен из локального хранилища
+  if (!token) {
+    throw new Error("Токен отсутствует");
+  }
+  const { data } = await $host.post(
+    "api/user/resetPassword",
+    { password, passwordConfirmation },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`, // добавляем токен в заголовок Authorization
+      },
+    }
+  );
+  localStorage.setItem("token", data.token); // обновляем токен в локальном хранилище
   return jwt_decode(data.token);
 };
 
