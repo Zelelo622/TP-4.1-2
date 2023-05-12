@@ -13,6 +13,7 @@ import {
   PRODUCT_ORDER,
   PROFILE,
   REGISTRATION_ROUTE,
+  RESET_PASS,
   SEARCH_PRODUCTS,
 } from "./utils/consts";
 import Cart from "./pages/Cart";
@@ -21,6 +22,7 @@ import Profile from "./pages/Profile";
 import HistoryOrder from "./pages/HistoryOrder";
 import ProductsOrder from "./pages/ProductsOrder";
 import SearchProducts from "./pages/SearchProducts";
+import PasswordReset from "./pages/PasswordReset";
 
 export const authRoutes = [
   {
@@ -49,6 +51,10 @@ export const publicRoutes = [
   {
     path: REGISTRATION_ROUTE,
     Component: Auth,
+  },
+  {
+    path: RESET_PASS,
+    Component: PasswordReset,
   },
   {
     path: HOME,
