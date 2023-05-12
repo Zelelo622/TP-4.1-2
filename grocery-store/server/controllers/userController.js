@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { User } = require("../models/models");
 const { validationResult } = require("express-validator");
+const validator = require("validator");
 
 const generateJwt = (id, first_name, second_name, phone, role) => {
   return jwt.sign(
@@ -16,26 +17,36 @@ class UserController {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return res
-          .status(400)
-          .json({ message: "Ошибка при регистрации", errors });
+        return res.status(400).json({ errors });
       }
-      const { first_name, second_name, phone, password, secret_word, role } =
-        req.body;
+      const {
+        first_name,
+        second_name,
+        phone,
+        password,
+        passwordConfirmation,
+        secret_word,
+        role,
+      } = req.body;
+
+      if (password !== passwordConfirmation) {
+        return res.status(400).json({ password: "Пароли не совпадают" });
+      }
 
       const candidate = await User.findOne({ where: { phone } });
       if (candidate) {
         return res
           .status(400)
-          .json({ message: "Пользователь с таким телефоном уже существует" });
+          .json({ phone: "Пользователь с таким телефоном уже существует" });
       }
       const hashPassword = await bcrypt.hash(password, 5);
+      const hashSecretWord = await bcrypt.hash(secret_word, 5);
       const user = await User.create({
         first_name,
         second_name,
         phone,
         password: hashPassword,
-        secret_word,
+        secret_word: hashSecretWord,
         role,
       });
       const token = generateJwt(
@@ -48,7 +59,7 @@ class UserController {
       return res.json({ token });
     } catch (e) {
       console.log(e);
-      res.status(400).json({ message: "Registration error" });
+      res.status(400).json({ message: "Ошибка регистрации" });
     }
   }
 
@@ -59,11 +70,11 @@ class UserController {
       if (!user) {
         return res
           .status(400)
-          .json({ message: `Пользователь c телефоном ${phone} не найден` });
+          .json({ phone: `Пользователь c телефоном ${phone} не найден` });
       }
       let comparePassword = bcrypt.compareSync(password, user.password);
       if (!comparePassword) {
-        return res.status(400).json({ message: `Введен неверный пароль` });
+        return res.status(400).json({ password: `Введен неверный пароль` });
       }
       const token = generateJwt(
         user.id,
@@ -75,7 +86,7 @@ class UserController {
       return res.json({ token });
     } catch (e) {
       console.log(e);
-      res.status(400).json({ message: "Login error" });
+      res.status(400).json({ message: "Ошибка авторизации" });
     }
   }
 
@@ -88,6 +99,80 @@ class UserController {
       req.user.role
     );
     return res.json({ token });
+  }
+
+  async verifyAccount(req, res) {
+    const { phone, secret_word } = req.body;
+
+    try {
+      const user = await User.findOne({
+        where: { phone },
+      });
+      if (!user) {
+        return res.status(404).json({ message: "Пользователь не найден" });
+      }
+
+      if (!user.secret_word) {
+        return res
+          .status(400)
+          .json({ message: "Секретное слово пользователя не определено" });
+      }
+
+      if (!secret_word) {
+        return res.status(400).json({ message: "Секретное слово пустое" });
+      }
+
+      const validSecret = await bcrypt.compare(secret_word, user.secret_word);
+      if (!validSecret) {
+        return res.status(401).json({ message: "Неверное секретное слово" });
+      }
+
+      const token = jwt.sign({ phone }, process.env.SECRET_KEY, {
+        expiresIn: "15m",
+      });
+
+      res.json({ token });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Ошибка сервера" });
+    }
+  }
+
+  async resetPassword(req, res) {
+    const { password, passwordConfirmation } = req.body;
+    const token = req.headers.authorization?.split(" ")[1];
+
+    if (!token) {
+      return res.status(401).json({ message: "Токен отсутствует" });
+    }
+
+    if (password !== passwordConfirmation) {
+      return res.status(400).json({ password: "Пароли не совпадают" });
+    }
+
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors });
+      }
+      const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
+      const userPhone = decodedToken.phone;
+
+      const hashedPassword = await bcrypt.hash(password, 5);
+      await User.update(
+        { password: hashedPassword },
+        { where: { phone: userPhone } }
+      );
+
+      // пересоздаем токен и отправляем его в ответе
+      const newToken = jwt.sign({ phone: userPhone }, process.env.SECRET_KEY, {
+        expiresIn: "15m",
+      });
+      res.json({ message: "Пароль успешно изменен", token: newToken });
+    } catch (error) {
+      console.error(error);
+      res.status(404).json({ message: "Неверный токен" });
+    }
   }
 
   async getAll(req, res, next) {
