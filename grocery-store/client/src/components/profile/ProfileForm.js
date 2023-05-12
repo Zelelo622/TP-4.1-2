@@ -43,7 +43,11 @@ const ProfileForm = ({ initialData, onSubmit, onCancel }) => {
       setRepeatNewPassword("");
       setPasswordsMatch(false);
     } else if (!isEditingPassword) {
-      onSubmit(formData);
+      const updatedFormData = { ...formData };
+      if (updatedFormData.password) {
+        delete updatedFormData.password;
+      }
+      onSubmit(updatedFormData);
     }
   };
 
@@ -130,7 +134,10 @@ const ProfileForm = ({ initialData, onSubmit, onCancel }) => {
           <button
             type="button"
             className="profile__btn-link"
-            onClick={() => setShowChangePassword(true)}
+            onClick={() => {
+              setShowChangePassword(true);
+              setIsEditingPassword(true);
+            }}
           >
             Изменить пароль
           </button>

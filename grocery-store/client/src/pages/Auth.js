@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Container, Form, Button, Row, Col } from "react-bootstrap";
+import { Container, Form } from "react-bootstrap";
 import "../assets/styles/Auth.css";
 import { useLocation } from "react-router";
 import {
@@ -223,7 +223,7 @@ const Auth = observer(() => {
                 </Form.Group>
               </>
             )}
-            <div style={{ color: "red" }}>{errorMessage}</div>
+            <div style={{ color: "red", marginBottom: "10px" }}>{errorMessage}</div>
             <button type="submit" className="login-button">
               {isLogin ? "Войти" : "Зарегистрироваться"}
             </button>

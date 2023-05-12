@@ -40,7 +40,7 @@ export const verifyAccount = async (phone, secret_word) => {
 };
 
 export const resetPassword = async (password, passwordConfirmation) => {
-  const token = localStorage.getItem("token"); // получаем токен из локального хранилища
+  const token = localStorage.getItem("token");
   if (!token) {
     throw new Error("Токен отсутствует");
   }
@@ -49,11 +49,11 @@ export const resetPassword = async (password, passwordConfirmation) => {
     { password, passwordConfirmation },
     {
       headers: {
-        Authorization: `Bearer ${token}`, // добавляем токен в заголовок Authorization
+        Authorization: `Bearer ${token}`,
       },
     }
   );
-  localStorage.setItem("token", data.token); // обновляем токен в локальном хранилище
+  localStorage.setItem("token", data.token);
   return jwt_decode(data.token);
 };
 

@@ -4,12 +4,13 @@ import { observer } from "mobx-react-lite";
 import { useNavigate } from "react-router-dom";
 import { HOME } from "../../utils/consts";
 import { deleteUser } from "../../http/userAPI";
-import { Button, Modal } from "react-bootstrap";
+import { Alert, Button, Modal } from "react-bootstrap";
 
 const ProfileData = observer(({ userData, onEdit }) => {
   const { user } = useContext(Context);
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
+  const [deleteError, setdeleteError] = useState("");
 
   const logOut = () => {
     user.setUser({});
@@ -19,12 +20,17 @@ const ProfileData = observer(({ userData, onEdit }) => {
   };
 
   const handleDeleteAccount = async () => {
-    await deleteUser(userData.phone);
-    user.setUser({});
-    user.setIsAuth(false);
-    localStorage.removeItem("token");
-    navigate(HOME);
+    try {
+      await deleteUser(userData.phone);
+      user.setUser({});
+      user.setIsAuth(false);
+      localStorage.removeItem("token");
+      navigate(HOME);
+    } catch (e) {
+      setdeleteError(e.response.data);
+    }
   };
+  
 
   const handleShowModal = () => {
     setShowModal(true);
@@ -76,6 +82,7 @@ const ProfileData = observer(({ userData, onEdit }) => {
               <Button variant="primary" onClick={handleDeleteAccount}>
                 Да
               </Button>
+              {deleteError && <Alert variant="danger">{deleteError}</Alert>}
             </Modal.Footer>
           </Modal>
         </div>
