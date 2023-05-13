@@ -12,7 +12,7 @@ import ProductList from "../components/product/ProductList";
 import PagesProduct from "../components/product/PagesProduct";
 
 const Products = observer(() => {
-  const { product } = useContext(Context);
+  const { product, user } = useContext(Context);
   const { categoryId } = useParams();
   const [filters, setFilters] = useState({
     priceRange: "",
@@ -78,6 +78,13 @@ const Products = observer(() => {
                   <Filter onFilterChange={onFilterChange} />
                 </div>
                 <div>
+                  {user.user.role === "ADMIN" && (
+                    <div className="admin-btn-container">
+                      <button className="button add-prod-btn">
+                        Добавить товар
+                      </button>
+                    </div>
+                  )}
                   <ProductList />
                   <PagesProduct />
                 </div>

@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { PRODUCT } from "../../utils/consts";
 import { handleAddToCart } from "../../utils/cartUtils";
+import { observer } from "mobx-react-lite";
+import { Context } from "../..";
 
-const ProductCard = ({ product }) => {
+const ProductCard = observer(({ product }) => {
+  const { user } = useContext(Context);
 
   return (
     <Link to={PRODUCT + "/" + product.name}>
@@ -18,18 +21,20 @@ const ProductCard = ({ product }) => {
             <h3 className="product-name">{product.name}</h3>
             <div className="product-basket">
               <p className="product-price">{product.price}</p>
-              <button
-                className="product-button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleAddToCart(product);
-                }}
-              ></button>
+              {user.user.role !== "ADMIN" && (
+                <button
+                  className="product-button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleAddToCart(product);
+                  }}
+                ></button>
+              )}
             </div>
           </div>
         </div>
       </li>
     </Link>
   );
-};
+});
 export default ProductCard;

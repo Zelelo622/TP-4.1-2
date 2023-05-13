@@ -250,6 +250,15 @@
   display: none;
 }
 
+.admin-btn-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.add-prod-btn {
+  margin-bottom: 40px;
+}
+
 @media (max-width: 1400px) {
   .product-list {
     grid-template-columns: repeat(3, 1fr);
@@ -338,6 +347,14 @@
 
   .product-list {
     gap: 10px;
+  }
+
+  .admin-btn-container {
+    justify-content: center;
+  }
+
+  .add-prod-btn {
+    font-size: 18px;
   }
 }
 

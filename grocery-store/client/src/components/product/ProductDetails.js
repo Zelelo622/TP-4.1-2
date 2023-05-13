@@ -1,12 +1,15 @@
-import React, { useMemo, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import "../../assets/styles/ProductDetails.css";
 import { handleAddToCart } from "../../utils/cartUtils";
 import { NumericFormat } from "react-number-format";
+import { observer } from "mobx-react-lite";
+import { Context } from "../..";
 
-const ProductDetails = ({ product }) => {
+const ProductDetails = observer(({ product }) => {
   const [showCaloriesCalculator, setShowCaloriesCalculator] = useState(false);
   const [inputCalories, setInputCalories] = useState(0);
   const [packsAmount, setPacksAmount] = useState(0);
+  const { user } = useContext(Context);
 
   const handleInputChange = (e) => {
     setInputCalories(e.target.value);
@@ -50,14 +53,25 @@ const ProductDetails = ({ product }) => {
         <h2 className="product-title">{product.name}</h2>
         <div className="product-cart">
           <p className="product-price">{product.price} руб.</p>
-          <button
-            className="add-to-cart-btn button"
-            onClick={(e) => {
-              handleAddToCart(product);
-            }}
-          >
-            В корзину
-          </button>
+          {user.user.role !== "ADMIN" ? (
+            <button
+              className="add-to-cart-btn button"
+              onClick={(e) => {
+                handleAddToCart(product);
+              }}
+            >
+              В корзину
+            </button>
+          ) : (
+            <>
+              <button className="add-to-cart-btn button">
+                Редактировать товар
+              </button>
+              <button style={{marginLeft: "10px"}} className="add-to-cart-btn add-to-cart-btn-red button">
+                Удалить
+              </button>
+            </>
+          )}
         </div>
         <div className="product-description">
           <div className="product-comp">
@@ -151,6 +165,6 @@ const ProductDetails = ({ product }) => {
       </div>
     </div>
   );
-};
+});
 
 export default ProductDetails;
