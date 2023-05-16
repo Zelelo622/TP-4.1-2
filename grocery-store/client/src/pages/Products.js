@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { observer } from "mobx-react-lite";
@@ -7,12 +7,13 @@ import { Context } from "../index";
 import { fetchProductByCategory } from "../http/productAPI";
 import Filter from "../components/product/Filter";
 import "../assets/styles/Products.css";
-import { Row, Col, Container } from "react-bootstrap";
+import { Row, Container } from "react-bootstrap";
 import ProductList from "../components/product/ProductList";
 import PagesProduct from "../components/product/PagesProduct";
+import { PRODUCT_ADD } from "../utils/consts";
 
 const Products = observer(() => {
-  const { product, user } = useContext(Context);
+  const { category, product, user } = useContext(Context);
   const { categoryId } = useParams();
   const [filters, setFilters] = useState({
     priceRange: "",
@@ -30,6 +31,7 @@ const Products = observer(() => {
         );
         product.setProducts(data.rows);
         product.setTotalCount(data.count);
+        category.setCategoryId(categoryId);
       } catch (e) {
         console.error(e);
       }
@@ -48,6 +50,7 @@ const Products = observer(() => {
         );
         product.setProducts(data.rows);
         product.setTotalCount(data.count);
+        category.setCategoryId(categoryId);
       } catch (e) {
         console.error(e);
       }
@@ -80,9 +83,9 @@ const Products = observer(() => {
                 <div>
                   {user.user.role === "ADMIN" && (
                     <div className="admin-btn-container">
-                      <button className="button add-prod-btn">
+                      <Link to={PRODUCT_ADD} className="button add-prod-btn">
                         Добавить товар
-                      </button>
+                      </Link>
                     </div>
                   )}
                   <ProductList />

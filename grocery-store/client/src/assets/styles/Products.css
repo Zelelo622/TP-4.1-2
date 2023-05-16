@@ -193,6 +193,7 @@
   box-shadow: 0px 0px 15px rgba(107, 107, 107, 0.15);
   border-radius: 10px;
   margin-bottom: auto;
+  height: 100%;
 }
 
 .product-image {
@@ -257,6 +258,9 @@
 
 .add-prod-btn {
   margin-bottom: 40px;
+}
+.add-prod-btn:hover {
+  color: #fff;
 }
 
 @media (max-width: 1400px) {

@@ -1,4 +1,4 @@
-import { $authHost, $host } from "./index";
+import { $adminHost, $authHost, $host } from "./index";
 
 export const fetchProductByCategory = async (categoryId, filters, page, limit) => {
   const { priceRange, isVegetarian, calRange } = filters;
@@ -29,3 +29,7 @@ export const fetchProductByName = async (name, filters, page, limit) => {
   return data;
 }
 
+export const createProduct = async(productId) => {
+  const { data } = await $adminHost.post('api/product', productId);
+  return data;
+}

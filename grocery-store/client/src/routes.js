@@ -10,6 +10,7 @@ import {
   ORDER,
   PRODUCT,
   PRODUCTS,
+  PRODUCT_ADD,
   PRODUCT_ORDER,
   PROFILE,
   REGISTRATION_ROUTE,
@@ -23,6 +24,7 @@ import HistoryOrder from "./pages/HistoryOrder";
 import ProductsOrder from "./pages/ProductsOrder";
 import SearchProducts from "./pages/SearchProducts";
 import PasswordReset from "./pages/PasswordReset";
+import AdminAddProduct from "./pages/AdminAddProduct";
 
 export const authRoutes = [
   {
@@ -40,6 +42,10 @@ export const authRoutes = [
   {
     path: PRODUCT_ORDER + "/:id",
     Component: ProductsOrder,
+  },
+  {
+    path: PRODUCT_ADD,
+    Component: AdminAddProduct,
   },
 ];
 

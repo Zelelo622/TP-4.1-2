@@ -9,11 +9,6 @@
   margin-right: 140px;
 }
 
-.product-image img {
-  width: 100%;
-  height: auto;
-}
-
 .product-info {
   width: 100%;
 }
@@ -95,6 +90,49 @@
   background-color: #c40000;
 }
 
+.admin-product-price {
+  margin-bottom: 20px;
+}
+
+.admin-nutrition-item {
+  display: flex;
+}
+
+.admin-product-input {
+  width: 423px;
+}
+
+.admin-calc-input {
+  width: 66px;
+  margin-left: 5px;
+}
+
+.admin-prod-cont {
+  margin-bottom: 30px;
+}
+
+.admin-add-prod-btn {
+  margin-top: 30px;
+}
+
+.admin-product-input::-webkit-inner-spin-button,
+.admin-product-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.admin-product-input {
+  -moz-appearance: textfield;
+}
+
+.error-message {
+  margin-top: 30px;
+  color: #c40000;
+}
+
+.nutrition-item-text {
+  white-space: nowrap;
+}
+
 @media only screen and (max-width: 1200px) {
   .product-calc {
     flex-direction: column;
@@ -171,6 +209,10 @@
 
   .product-calc {
     align-items: center;
+  }
+
+  .admin-product-input {
+    width: 100%;
   }
 }
 
