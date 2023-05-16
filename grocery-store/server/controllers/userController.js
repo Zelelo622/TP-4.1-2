@@ -124,7 +124,7 @@ class UserController {
 
       const validSecret = await bcrypt.compare(secret_word, user.secret_word);
       if (!validSecret) {
-        return res.status(401).json({ message: "Неверное секретное слово" });
+        return res.status(400).json({ message: "Неверное секретное слово" });
       }
 
       const token = jwt.sign({ phone }, process.env.SECRET_KEY, {
