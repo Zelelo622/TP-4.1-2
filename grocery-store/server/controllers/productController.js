@@ -3,6 +3,7 @@ const { Op } = require("sequelize");
 const uuid = require("uuid");
 const path = require("path");
 const ApiError = require("../error/ApiError");
+const mime = require("mime");
 
 class ProductController {
   async getProductsByCategory(req, res, next) {
@@ -60,7 +61,48 @@ class ProductController {
         vegetarian,
         categoryId,
       } = req.body;
+
+      if (!req.files || !req.files.img) {
+        return res.status(400).json({ error: "Пожалуйста, выберите файл изображения." });
+      }
+
       const { img } = req.files;
+
+      const fileExtension = mime.getExtension(img.mimetype);
+      if (fileExtension !== "jpg" && fileExtension !== "jpeg") {
+        return res
+          .status(400)
+          .json({ error: "Пожалуйста, выберите файл формата JPG." });
+      }
+
+      if (
+        !name ||
+        !price ||
+        !composition ||
+        !protein ||
+        !fat ||
+        !carbohydrates ||
+        !calories ||
+        !weight ||
+        !categoryId ||
+        !img
+      ) {
+        return res
+          .status(400)
+          .json({ error: "Пожалуйста, заполните все обязательные поля." });
+      }
+
+      if (
+        price < 0 ||
+        protein < 0 ||
+        fat < 0 ||
+        carbohydrates < 0 ||
+        calories < 0 ||
+        weight < 0
+      ) {
+        return res.status(400).json({ error: "Введите положительное число." });
+      }
+
       let fileName = uuid.v4() + ".jpg";
       img.mv(path.resolve(__dirname, "..", "static", fileName));
 
