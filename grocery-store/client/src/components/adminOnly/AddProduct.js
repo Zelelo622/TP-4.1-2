@@ -71,7 +71,7 @@ const AdminProductForm = observer(() => {
           />
         </div>
         <div className="admin-prod-cont">
-          <p className="product-price admin-product-price">Вес</p>
+          <p className="product-price admin-product-price">Масса нетто (г.)</p>
           <Form.Control
             className="admin-product-input"
             type="number"

@@ -9,6 +9,11 @@
   margin-right: 140px;
 }
 
+.product-image img {
+  width: 100%;
+  height: auto;
+}
+
 .product-info {
   width: 100%;
 }
@@ -28,6 +33,29 @@
   font-weight: 500;
   font-size: 27px;
   margin-right: 38px;
+}
+
+.product-container-info {
+  display: flex;
+  align-items: first baseline;
+  margin-bottom: 30px;
+}
+
+.product-weight {
+  font-weight: 500;
+  font-size: 27px;
+  margin-right: 38px;
+  margin-bottom: 0;
+}
+
+.product-vegetarian {
+  font-size: 20px;
+  text-decoration: underline;
+}
+
+.product-weight-val {
+  font-size: 20px;
+  margin-bottom: 0;
 }
 
 .product-comp {
@@ -207,6 +235,11 @@
     margin-bottom: 10px;
   }
 
+  .product-weight {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
   .product-calc {
     align-items: center;
   }
@@ -223,6 +256,14 @@
 
   .product-price {
     font-size: 22px;
+  }
+
+  .product-weight{
+    font-size: 22px;
+  }
+
+  .product-weight-val {
+    font-size: 18px;
   }
 
   .add-to-cart-btn {
