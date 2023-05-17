@@ -1,5 +1,5 @@
 const { Product } = require("../models/models");
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 const uuid = require("uuid");
 const path = require("path");
 const ApiError = require("../error/ApiError");
@@ -63,7 +63,9 @@ class ProductController {
       } = req.body;
 
       if (!req.files || !req.files.img) {
-        return res.status(400).json({ error: "Пожалуйста, выберите файл изображения." });
+        return res
+          .status(400)
+          .json({ error: "Пожалуйста, выберите файл изображения." });
       }
 
       const { img } = req.files;
@@ -73,6 +75,17 @@ class ProductController {
         return res
           .status(400)
           .json({ error: "Пожалуйста, выберите файл формата JPG." });
+      }
+
+      const existingProduct = await Product.findOne({
+        where: Sequelize.where(
+          Sequelize.fn("LOWER", Sequelize.col("name")),
+          Sequelize.fn("LOWER", name.trim())
+        ),
+      });
+
+      if (existingProduct) {
+        return res.status(400).json({ error: "Имя уже существует." });
       }
 
       if (
@@ -140,9 +153,9 @@ class ProductController {
   }
 
   async update(req, res) {
-    const { id } = req.params;
+    const { name } = req.params;
     const {
-      name,
+      newName,
       price,
       composition,
       protein,
@@ -152,34 +165,77 @@ class ProductController {
       weight,
       vegetarian,
     } = req.body;
-    const { img } = req.files;
-    let fileName = uuid.v4() + ".jpg";
-    img.mv(path.resolve(__dirname, "..", "static", fileName));
-    const product = await Product.update(
-      {
-        name: name,
-        price: price,
-        composition: composition,
-        protein: protein,
-        fat: fat,
-        carbohydrates: carbohydrates,
-        calories: calories,
-        weight: weight,
-        vegetarian,
-        vegetarian,
-        img: fileName,
-      },
-      {
-        where: { id },
+    const imgFile = req.files && req.files.img;
+
+    let productData = {};
+
+    if (newName && newName.trim() !== name.trim()) {
+      const trimmedNewName = newName.trim();
+      const existingProduct = await Product.findOne({
+        where: { name: trimmedNewName },
+      });
+      if (existingProduct) {
+        return res.status(400).json({ error: "Имя уже существует." });
       }
-    );
+    }
+
+    if (imgFile) {
+      const fileExtension = mime.getExtension(imgFile.mimetype);
+      if (fileExtension !== "jpg" && fileExtension !== "jpeg") {
+        return res.status(400).json({ error: "Выберите файл формата JPG." });
+      }
+    }
+
+    if (
+      !newName ||
+      !price ||
+      !composition ||
+      !protein ||
+      !fat ||
+      !carbohydrates ||
+      !calories ||
+      !weight ||
+      !vegetarian
+    ) {
+      return res
+        .status(400)
+        .json({ error: "Заполните все обязательные поля." });
+    }
+
+    if (
+      price < 0 ||
+      protein < 0 ||
+      fat < 0 ||
+      carbohydrates < 0 ||
+      calories < 0 ||
+      weight < 0
+    ) {
+      return res.status(400).json({ error: "Введите положительное число." });
+    }
+
+    productData = {
+      name: newName,
+      price,
+      composition,
+      protein,
+      fat,
+      carbohydrates,
+      calories,
+      weight,
+      vegetarian,
+    };
+
+    const product = await Product.update(productData, {
+      where: { name },
+    });
+
     return res.json(product);
   }
 
   async delete(req, res) {
-    const { id } = req.params;
+    const { name } = req.params;
     const product = Product.destroy({
-      where: { id },
+      where: { name },
     });
     return res.json(product);
   }
