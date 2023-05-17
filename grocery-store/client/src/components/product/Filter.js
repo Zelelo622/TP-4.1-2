@@ -5,7 +5,7 @@ import { NumericFormat } from "react-number-format";
 import { Modal } from "react-bootstrap";
 
 const Filter = ({ onFilterChange }) => {
-  const [priceRange, setPriceRange] = useState([0, 1000]);
+  const [priceRange, setPriceRange] = useState([0, 5000]);
   const [isVegetarian, setIsVegetarian] = useState("");
   const [calRange, setCalRange] = useState([0, 2000]);
   const [timer, setTimer] = useState(null);

@@ -12,6 +12,7 @@ import {
   PRODUCTS,
   PRODUCT_ADD,
   PRODUCT_ORDER,
+  PRODUCT_UPDATE,
   PROFILE,
   REGISTRATION_ROUTE,
   RESET_PASS,
@@ -25,6 +26,7 @@ import ProductsOrder from "./pages/ProductsOrder";
 import SearchProducts from "./pages/SearchProducts";
 import PasswordReset from "./pages/PasswordReset";
 import AdminAddProduct from "./pages/AdminAddProduct";
+import AdminUpdateProduct from "./pages/AdminUpdateProduct";
 
 export const authRoutes = [
   {
@@ -46,6 +48,10 @@ export const authRoutes = [
   {
     path: PRODUCT_ADD,
     Component: AdminAddProduct,
+  },
+  {
+    path: PRODUCT_UPDATE + "/:name",
+    Component: AdminUpdateProduct,
   },
 ];
 

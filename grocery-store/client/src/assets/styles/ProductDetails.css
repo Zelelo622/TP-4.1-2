@@ -3,6 +3,12 @@
   justify-content: space-between;
 }
 
+.product-card-image {
+  width: 100%;
+  max-width: 450px;
+  margin-bottom: 40px;
+}
+
 .product-image {
   width: 100%;
   max-width: 450px;
@@ -112,6 +118,10 @@
 
 .packs-amount span {
   font-weight: 700;
+}
+
+.add-to-cart-btn:hover {
+  color: #fff;
 }
 
 .add-to-cart-btn-red {
@@ -258,7 +268,7 @@
     font-size: 22px;
   }
 
-  .product-weight{
+  .product-weight {
     font-size: 22px;
   }
 

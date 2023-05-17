@@ -11,28 +11,30 @@ const ProductCard = observer(({ product }) => {
   return (
     <Link to={PRODUCT + "/" + product.name}>
       <li className="product-item">
-        <div className="product-container">
-          <img
-            className="product-image"
-            src={process.env.REACT_APP_API_URL + product.img}
-            alt={product.name}
-          />
-          <div className="product-details">
+        {/* <div className="product-container"> */}
+        <img
+          className="product-card-image"
+          src={process.env.REACT_APP_API_URL + product.img}
+          alt={product.name}
+        />
+        <div className="product-details">
+          <div className="product-name-container">
             <h3 className="product-name">{product.name}</h3>
-            <div className="product-basket">
-              <p className="product-price">{product.price}</p>
-              {user.user.role !== "ADMIN" && (
-                <button
-                  className="product-button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleAddToCart(product);
-                  }}
-                ></button>
-              )}
-            </div>
+          </div>
+          <div className="product-basket">
+            <p className="product-price">{product.price.toLocaleString()}</p>
+            {user.user.role !== "ADMIN" && (
+              <button
+                className="product-button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleAddToCart(product);
+                }}
+              ></button>
+            )}
           </div>
         </div>
+        {/* </div> */}
       </li>
     </Link>
   );

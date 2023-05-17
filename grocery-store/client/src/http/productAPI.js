@@ -33,3 +33,13 @@ export const createProduct = async(productId) => {
   const { data } = await $adminHost.post('api/product', productId);
   return data;
 }
+
+export const updateProduct = async(name, product) => {
+  const { data } = await $adminHost.put('api/product/' + name, product);
+  return data;
+}
+
+export const deleteProduct = async (name) => {
+  const { data } = await $adminHost.delete('api/product/' + name);
+  return data;
+}

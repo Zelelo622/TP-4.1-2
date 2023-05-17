@@ -4,15 +4,33 @@ import { handleAddToCart } from "../../utils/cartUtils";
 import { NumericFormat } from "react-number-format";
 import { observer } from "mobx-react-lite";
 import { Context } from "../..";
+import { Link } from "react-router-dom";
+import { PRODUCTS, PRODUCT_UPDATE } from "../../utils/consts";
+import { deleteProduct } from "../../http/productAPI";
+import { Button, Modal } from "react-bootstrap";
 
 const ProductDetails = observer(({ product }) => {
   const [showCaloriesCalculator, setShowCaloriesCalculator] = useState(false);
   const [inputCalories, setInputCalories] = useState(0);
   const [packsAmount, setPacksAmount] = useState(0);
+  const [showModal, setShowModal] = useState(false);
   const { user } = useContext(Context);
 
   const handleInputChange = (e) => {
     setInputCalories(e.target.value);
+  };
+
+  const handleDeleteProduct = async () => {
+    await deleteProduct(product.name);
+    window.location.href = PRODUCTS + "/" + product.categoryId;
+  };
+
+  const handleShowModal = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
   };
 
   const { totalProtein, totalFat, totalCarbs } = useMemo(() => {
@@ -64,15 +82,32 @@ const ProductDetails = observer(({ product }) => {
             </button>
           ) : (
             <>
-              <button className="add-to-cart-btn button">
+              <Link
+                to={PRODUCT_UPDATE + `/${product.name}`}
+                className="add-to-cart-btn button"
+              >
                 Редактировать товар
-              </button>
+              </Link>
               <button
+                onClick={handleShowModal}
                 style={{ marginLeft: "10px" }}
                 className="add-to-cart-btn add-to-cart-btn-red button"
               >
                 Удалить
               </button>
+              <Modal show={showModal} onHide={handleCloseModal}>
+                <Modal.Header closeButton>
+                  <Modal.Title>Вы точно хотите удалить товар?</Modal.Title>
+                </Modal.Header>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCloseModal}>
+                    Нет
+                  </Button>
+                  <Button variant="primary" onClick={handleDeleteProduct}>
+                    Да
+                  </Button>
+                </Modal.Footer>
+              </Modal>
             </>
           )}
         </div>

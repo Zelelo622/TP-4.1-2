@@ -11,3 +11,4 @@ export const PROFILE = "/profile";
 export const HISTORY_ORDER = "/history-order";
 export const PRODUCT_ORDER = "/product-order";
 export const PRODUCT_ADD = "/add-product"
+export const PRODUCT_UPDATE = "/update-product"
