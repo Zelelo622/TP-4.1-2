@@ -67,12 +67,27 @@ const ProductDetails = observer(({ product }) => {
               <button className="add-to-cart-btn button">
                 Редактировать товар
               </button>
-              <button style={{marginLeft: "10px"}} className="add-to-cart-btn add-to-cart-btn-red button">
+              <button
+                style={{ marginLeft: "10px" }}
+                className="add-to-cart-btn add-to-cart-btn-red button"
+              >
                 Удалить
               </button>
             </>
           )}
         </div>
+        <div className="product-container-info">
+          <p className="product-weight">Масса нетто:</p>
+          <p className="product-weight-val">{product.weight} г.</p>
+        </div>
+        <div className="product-container-info">
+          <p className="product-vegetarian">
+            {product.vegetarian
+              ? "Вегетарианский продукт"
+              : "Не вегетарианский продукт"}
+          </p>
+        </div>
+        <div className="product-cart-"></div>
         <div className="product-description">
           <div className="product-comp">
             <p className="comp-title">Состав:</p>
