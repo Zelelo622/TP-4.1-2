@@ -71,3 +71,8 @@ export const deleteUser = async (phone) => {
   const { data } = await $authHost.delete(`api/profile/${phone}`);
   return data;
 };
+
+export const fetchAllCouriers = async () => {
+  const { data } = await $authHost.get('api/profile/couriers');
+  return data;
+};
