@@ -181,7 +181,21 @@ class UserController {
       return res.json(users);
     } catch (e) {
       console.log(e);
-      res.status(400).json({ message: "Get users error" });
+      res.status(400).json({ message: "Ошибка запроса пользователей" });
+    }
+  }
+
+  async getAllCourier(req, res, next) {
+    try {
+      const users = await User.findAll({
+        where: {
+          role: ["COURIER"],
+        },
+      });
+      return res.json(users);
+    } catch (e) {
+      console.log(e);
+      res.status(400).json({ message: "Ошибка запроса пользователей" });
     }
   }
 

@@ -42,8 +42,19 @@ class OrderController {
 
   async getAll(req, res, next) {
     try {
-      const orders = await Orders.findAll({ include: OrdersProduct });
-      res.json(orders);
+      let { limit, page } = req.query;
+      page = page || 1;
+      limit = limit || 9;
+      let offset = page * limit - limit;
+      const orders = await Orders.findAll({
+        include: OrdersProduct,
+        limit,
+        offset,
+      });
+
+      const count = await Orders.count({});
+
+      res.json({ count, rows: orders });
     } catch (error) {
       next(error);
     }
@@ -73,14 +84,16 @@ class OrderController {
         });
       }
 
-      const orders = await Orders.findAndCountAll({
+      const orders = await Orders.findAll({
         where: { userId: user.id },
         include: OrdersProduct,
         limit,
         offset,
       });
 
-      res.json(orders);
+      const count = await Orders.count({ where: { userId: user.id } });
+
+      res.json({ count, rows: orders });
     } catch (error) {
       next(error);
     }
@@ -136,6 +149,7 @@ class OrderController {
       const token = req.headers.authorization.split(" ")[1];
       const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
       const userId = decodedToken.id;
+      const userRole = decodedToken.role;
 
       const order = await Orders.findByPk(id);
 
@@ -143,8 +157,14 @@ class OrderController {
         return res.status(404).json({ message: "Заказ не найден" });
       }
 
-      if (order.userId !== userId) {
-        return res.status(401).json({ message: "Нет прав на получение информации другого пользователя" });
+      if (
+        userRole !== "ADMIN" &&
+        userRole !== "COURIER" &&
+        order.userId !== userId
+      ) {
+        return res.status(401).json({
+          message: "Нет прав на получение информации другого пользователя",
+        });
       }
 
       const orderProducts = await OrdersProduct.findAll({
