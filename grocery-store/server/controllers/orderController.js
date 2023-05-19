@@ -44,14 +44,19 @@ class OrderController {
   async getAll(req, res, next) {
     try {
       let { limit, page } = req.query;
-      page = page || 1;
-      limit = limit || 9;
+      page = page  1;
+      limit = limit  9;
       let offset = page * limit - limit;
+
       const orders = await Orders.findAll({
         where: {
           status: "В обработке",
         },
         include: OrdersProduct,
+        order: [
+          ["courier_id", "DESC"],
+          ["createdAt", "ASC"],
+        ],
         limit,
         offset,
       });
