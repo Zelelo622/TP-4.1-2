@@ -33,3 +33,8 @@ export const fetchAllOrders = async (page, limit) => {
   const { data } = await $adminHost.get(`/api/order/${query}`);
   return data;
 }
+
+export const updateCourier = async (orderId, courierId) => {
+  const { data } = await $adminHost.put(`/api/order/${orderId}/courier`, { courierId });
+  return data;
+}

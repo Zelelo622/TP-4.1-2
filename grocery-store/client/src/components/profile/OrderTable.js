@@ -1,27 +1,41 @@
-import React, { useState } from "react";
-import { Table, Tooltip, OverlayTrigger, Form } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Table, Tooltip, OverlayTrigger, Button, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import { PRODUCT_ORDER } from "../../utils/consts";
-import "../../assets/styles/Tables.css";
 import { observer } from "mobx-react-lite";
+import { updateCourier } from "../../http/orderAPI";
+import "../../assets/styles/Tables.css";
 
 const OrderTable = observer(
   ({ order, onViewProductsClick, showCourierColumn, couriers }) => {
     const startIndex = (order.page - 1) * order.limit;
-    const [selectedCourierIds, setSelectedCourierIds] = useState(() => {
-      const initialSelectedCourierIds = Array(order.limit).fill("");
-      return order.orders.reduce((acc, _, index) => {
-        acc[startIndex + index] = initialSelectedCourierIds[index];
-        return acc;
-      }, []);
-    });
 
-    const handleCourierSelection = (e, index) => {
-      const updatedSelectedCourierIds = [...selectedCourierIds];
-      updatedSelectedCourierIds[startIndex + index] = e.target.value;
-      setSelectedCourierIds(updatedSelectedCourierIds);
+    const handleCourierChange = async (orderId, courierId) => {
+      try {
+        await updateCourier(orderId, courierId);
+        const updatedOrder = order.orders.find((o) => o.id === orderId);
+        updatedOrder.courier_id = courierId;
+        window.location.reload();
+      } catch (error) {
+        console.error(error);
+      }
     };
+
+    const handleCancelCourier = async (orderId) => {
+      try {
+        await updateCourier(orderId, null);
+        const updatedOrder = order.orders.find((o) => o.id === orderId);
+        updatedOrder.courier_id = null;
+        window.location.reload();
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const availableCouriers = couriers.filter(
+      (courier) => !order.orders.some((o) => o.courier_id === courier.id)
+    );
 
     return (
       <>
@@ -35,9 +49,10 @@ const OrderTable = observer(
               <th className="table-order__title">Сумма</th>
               <th className="table-order__title">Статус</th>
               {showCourierColumn && (
-                <th className="table-order__title table-order__title--couriers">
-                  Курьер
-                </th>
+                <th className="table-order__title">Курьеры</th>
+              )}
+              {showCourierColumn && (
+                <th className="table-order__title">Действия</th>
               )}
             </tr>
           </thead>
@@ -71,27 +86,51 @@ const OrderTable = observer(
                 </td>
                 <td className="table-order__data">{order.status}</td>
                 {showCourierColumn && (
-                  <td className="table-order__data table-order__data--couriers">
-                    <Form.Select
-                      value={selectedCourierIds[startIndex + index]}
-                      onChange={(e) => handleCourierSelection(e, index)}
-                    >
-                      <option value="">Выберите курьера</option>
-                      {couriers.map((courier) => (
-                        <option key={courier.id} value={courier.id}>
-                          {courier.second_name} {courier.first_name}
-                        </option>
-                      ))}
-                    </Form.Select>
-                    {selectedCourierIds[startIndex + index] && (
-                      <Form.Check
-                        className="mt-2"
-                        type="checkbox"
-                        label="Подтвердить курьера"
-                        onChange={() => {}}
-                      />
-                    )}
-                  </td>
+                  <>
+                    <td className="table-order__data">
+                      {order.courier_id ? (
+                        <span>
+                          {(() => {
+                            const foundCourier = couriers.find(
+                              (c) => c.id === order.courier_id
+                            );
+                            return foundCourier
+                              ? `${foundCourier.second_name} ${foundCourier.first_name}`
+                              : "";
+                          })()}
+                        </span>
+                      ) : (
+                        <Form.Select
+                          className="table-order__courier-select"
+                          value={order.courier_id || ""}
+                          onChange={(e) =>
+                            handleCourierChange(order.id, e.target.value)
+                          }
+                        >
+                          <option value="">Выберите курьера</option>
+                          {availableCouriers.map((courier) => (
+                            <option key={courier.id} value={courier.id}>
+                              {courier.second_name} {courier.first_name}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      )}
+                    </td>
+                    <td className="table-order__data">
+                      {order.courier_id ? (
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          className="table-order__cancel-button"
+                          onClick={() => handleCancelCourier(order.id)}
+                        >
+                          Отменить
+                        </Button>
+                      ) : (
+                        <></>
+                      )}
+                    </td>
+                  </>
                 )}
               </tr>
             ))}
