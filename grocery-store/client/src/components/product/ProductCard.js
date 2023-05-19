@@ -8,6 +8,8 @@ import { Context } from "../..";
 const ProductCard = observer(({ product }) => {
   const { user } = useContext(Context);
 
+  const isAdminOrCourier = user.user.role === "ADMIN" || user.user.role === "COURIER";
+
   return (
     <Link to={PRODUCT + "/" + product.name}>
       <li className="product-item">
@@ -23,7 +25,7 @@ const ProductCard = observer(({ product }) => {
           </div>
           <div className="product-basket">
             <p className="product-price">{product.price.toLocaleString()}</p>
-            {user.user.role !== "ADMIN" && (
+            {!isAdminOrCourier && (
               <button
                 className="product-button"
                 onClick={(e) => {
