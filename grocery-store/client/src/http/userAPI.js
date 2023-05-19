@@ -1,4 +1,4 @@
-import { $authHost, $host } from "./index";
+import { $adminHost, $authHost, $host } from "./index";
 import jwt_decode from "jwt-decode";
 
 export const registration = async (
@@ -69,5 +69,21 @@ export const updateUser = async (phone, user) => {
 
 export const deleteUser = async (phone) => {
   const { data } = await $authHost.delete(`api/profile/${phone}`);
+  return data;
+};
+
+export const deleteUserForAdmin = async (phone) => {
+  const { data } = await $adminHost.delete(`api/profile/${phone}/admin`);
+  return data;
+};
+
+export const fetchAllCouriers = async () => {
+  const { data } = await $authHost.get('api/profile/couriers');
+  return data;
+};
+
+export const fetchAll = async (page, limit) => {
+  const query = `?page=${page}&limit=${limit}`;
+  const { data } = await $authHost.get(`api/profile/${query}`);
   return data;
 };

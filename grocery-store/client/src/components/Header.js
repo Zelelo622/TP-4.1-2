@@ -44,6 +44,8 @@ const Header = observer(() => {
     product.setTotalCount(data.products.count);
   }
 
+  const isAdminOrCourier = user.user.role === "ADMIN" || user.user.role === "COURIER";
+
   return (
     <>
       <header className="header">
@@ -71,11 +73,13 @@ const Header = observer(() => {
                 <ul className="nav__list">
                   {user.isAuth ? (
                     <>
-                      <li className="nav__item">
-                        <Link to={CART}>
-                          <img src={CartSvg} alt="Корзина" />
-                        </Link>
-                      </li>
+                      {!isAdminOrCourier && (
+                        <li className="nav__item">
+                          <Link to={CART}>
+                            <img src={CartSvg} alt="Корзина" />
+                          </Link>
+                        </li>
+                      )}
                       <li className="nav__item">
                         <Link to={PROFILE + "/" + user.user.phone}>
                           <img
@@ -88,11 +92,13 @@ const Header = observer(() => {
                     </>
                   ) : (
                     <>
-                      <li className="nav__item">
-                        <Link to={CART}>
-                          <img src={CartSvg} alt="Корзина" />
-                        </Link>
-                      </li>
+                      {!isAdminOrCourier && (
+                        <li className="nav__item">
+                          <Link to={CART}>
+                            <img src={CartSvg} alt="Корзина" />
+                          </Link>
+                        </li>
+                      )}
                       <li className="nav__item">
                         <Link to={LOGIN_ROUTE}>
                           <img
@@ -126,18 +132,22 @@ const Header = observer(() => {
           <ul>
             {user.isAuth ? (
               <>
-                <li>
-                  <Link to={CART}>Корзина</Link>
-                </li>
+                {!isAdminOrCourier && (
+                  <li>
+                    <Link to={CART}>Корзина</Link>
+                  </li>
+                )}
                 <li>
                   <Link to={PROFILE + "/" + user.user.phone}>Профиль</Link>
                 </li>
               </>
             ) : (
               <>
-                <li>
-                  <Link to={CART}>Корзина</Link>
-                </li>
+                {!isAdminOrCourier && (
+                  <li>
+                    <Link to={CART}>Корзина</Link>
+                  </li>
+                )}
                 <li>
                   <Link to={LOGIN_ROUTE}>Войти</Link>
                 </li>

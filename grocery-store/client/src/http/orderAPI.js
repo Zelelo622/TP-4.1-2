@@ -1,4 +1,4 @@
-import { $authHost, $host } from "./index";
+import { $adminHost, $authHost, $host } from "./index";
 
 export const createOrder = async (
   userId,
@@ -24,6 +24,17 @@ export const fetchOneOrder = async (phone, page, limit) => {
 };
 
 export const fetchOrderProducts = async (orderId) => {
-  const {data} = await $authHost.get(`/api/order/${orderId}/products`);
+  const { data } = await $authHost.get(`/api/order/${orderId}/products`);
+  return data;
+}
+
+export const fetchAllOrders = async (page, limit) => {
+  const query = `?page=${page}&limit=${limit}`;
+  const { data } = await $adminHost.get(`/api/order/${query}`);
+  return data;
+}
+
+export const updateCourier = async (orderId, courierId) => {
+  const { data } = await $adminHost.put(`/api/order/${orderId}/courier`, { courierId });
   return data;
 }

@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { User } = require("../models/models");
+const { User, Orders } = require("../models/models");
 const { validationResult } = require("express-validator");
 const validator = require("validator");
 
@@ -253,6 +253,19 @@ class UserController {
       if (userRole !== "ADMIN" && user.id !== userId) {
         return res.status(401).json({
           message: "Нет прав на изменение данных другого пользователя",
+        });
+      }
+
+      const ordersWithCourier = await Orders.findOne({
+        where: {
+          courier_id: user.id,
+        },
+        attributes: ["id"],
+      });
+
+      if (ordersWithCourier) {
+        return res.status(400).json({
+          message: "Пользователь уже назначен в заказе, изменить роль нельзя",
         });
       }
 

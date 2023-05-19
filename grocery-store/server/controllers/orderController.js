@@ -47,11 +47,16 @@ class OrderController {
       page = page || 1;
       limit = limit || 9;
       let offset = page * limit - limit;
+
       const orders = await Orders.findAll({
         where: {
           status: "В обработке",
         },
         include: OrdersProduct,
+        order: [
+          ["courier_id", "DESC"],
+          ["createdAt", "ASC"],
+        ],
         limit,
         offset,
       });
@@ -138,23 +143,8 @@ class OrderController {
         return;
       }
 
-      const existingOrderWithCourier = await Orders.findOne({
-        where: {
-          courier_id: courierId,
-          id: {
-            [Op.ne]: orderId,
-          },
-        },
-      });
-      if (existingOrderWithCourier) {
-        res
-          .status(400)
-          .json({ message: "Курьер уже назначен для другого заказа" });
-        return;
-      }
-
       const courier = await User.findByPk(courierId);
-      if (!courier) {
+      if (!courier && courierId !== null) {
         res.status(404).json({ message: "Курьер не найден" });
         return;
       }
