@@ -140,12 +140,14 @@ class OrderController {
 
       const existingOrderWithCourier = await Orders.findOne({
         where: {
-          courier_id: courierId,
-          id: {
-            [Op.ne]: orderId,
-          },
+          [Op.and]: [
+            { courier_id: courierId },
+            { courier_id: { [Op.not]: null } },
+            { id: { [Op.ne]: orderId } },
+          ],
         },
       });
+
       if (existingOrderWithCourier) {
         res
           .status(400)
