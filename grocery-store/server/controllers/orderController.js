@@ -143,23 +143,6 @@ class OrderController {
         return;
       }
 
-      const existingOrderWithCourier = await Orders.findOne({
-        where: {
-          [Op.and]: [
-            { courier_id: courierId },
-            { courier_id: { [Op.not]: null } },
-            { id: { [Op.ne]: orderId } },
-          ],
-        },
-      });
-
-      if (existingOrderWithCourier) {
-        res
-          .status(400)
-          .json({ message: "Курьер уже назначен для другого заказа" });
-        return;
-      }
-
       const courier = await User.findByPk(courierId);
       if (!courier && courierId !== null) {
         res.status(404).json({ message: "Курьер не найден" });
