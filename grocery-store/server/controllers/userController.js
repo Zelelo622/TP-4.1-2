@@ -247,12 +247,25 @@ class UserController {
       if (!user) {
         return res
           .status(404)
-          .json({ message: `Пользователь c телефоном ${phone} не найден` });
+          .json({ message: Пользователь c телефоном ${phone} не найден });
       }
 
       if (userRole !== "ADMIN" && user.id !== userId) {
         return res.status(401).json({
           message: "Нет прав на изменение данных другого пользователя",
+        });
+      }
+
+      const ordersWithCourier = await Orders.findOne({
+        where: {
+          courier_id: user.id,
+        },
+        attributes: ["id"],
+      });
+
+      if (ordersWithCourier) {
+        return res.status(400).json({
+          message: "Пользователь уже назначен в заказе, изменить роль нельзя",
         });
       }
 
