@@ -9,13 +9,17 @@ import { observer } from "mobx-react-lite";
 const OrderTable = observer(
   ({ order, onViewProductsClick, showCourierColumn, couriers }) => {
     const startIndex = (order.page - 1) * order.limit;
-    const [selectedCourierIds, setSelectedCourierIds] = useState(
-      Array(order.orders.length).fill("")
-    );
+    const [selectedCourierIds, setSelectedCourierIds] = useState(() => {
+      const initialSelectedCourierIds = Array(order.limit).fill("");
+      return order.orders.reduce((acc, _, index) => {
+        acc[startIndex + index] = initialSelectedCourierIds[index];
+        return acc;
+      }, []);
+    });
 
     const handleCourierSelection = (e, index) => {
       const updatedSelectedCourierIds = [...selectedCourierIds];
-      updatedSelectedCourierIds[index] = e.target.value;
+      updatedSelectedCourierIds[startIndex + index] = e.target.value;
       setSelectedCourierIds(updatedSelectedCourierIds);
     };
 
@@ -31,7 +35,9 @@ const OrderTable = observer(
               <th className="table-order__title">Сумма</th>
               <th className="table-order__title">Статус</th>
               {showCourierColumn && (
-                <th className="table-order__title">Курьер</th>
+                <th className="table-order__title table-order__title--couriers">
+                  Курьер
+                </th>
               )}
             </tr>
           </thead>
@@ -65,9 +71,9 @@ const OrderTable = observer(
                 </td>
                 <td className="table-order__data">{order.status}</td>
                 {showCourierColumn && (
-                  <td className="table-order__data">
+                  <td className="table-order__data table-order__data--couriers">
                     <Form.Select
-                      value={selectedCourierIds[index]}
+                      value={selectedCourierIds[startIndex + index]}
                       onChange={(e) => handleCourierSelection(e, index)}
                     >
                       <option value="">Выберите курьера</option>
@@ -77,7 +83,7 @@ const OrderTable = observer(
                         </option>
                       ))}
                     </Form.Select>
-                    {selectedCourierIds[index] && (
+                    {selectedCourierIds[startIndex + index] && (
                       <Form.Check
                         className="mt-2"
                         type="checkbox"

@@ -27,10 +27,23 @@ td:hover {
   white-space: nowrap;
 }
 
+.table-order__data--name {
+  position: relative;
+  max-width: 0;
+  width: 60%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.2s;
+}
+
+.table-order__data--role {
+  width: 40%;
+}
+
 .table-order__data--address {
   position: relative;
   max-width: 0;
-  width: 100%;
+  width: 70%;
   overflow: hidden;
   text-overflow: ellipsis;
   cursor: pointer;
@@ -48,6 +61,14 @@ td:hover {
 }
 .table-order__link:hover {
   opacity: 0.7;
+}
+
+.table-order__title--couriers {
+  width: 30%; 
+}
+
+.table-order__data--couriers {
+  width: 30%; 
 }
 
 @media (max-width: 991px) {
@@ -93,6 +114,10 @@ td:hover {
   }
 
   .table-order__data--address {
+    max-width: 100%;
+  }
+
+  .table-order__data--name {
     max-width: 100%;
   }
 

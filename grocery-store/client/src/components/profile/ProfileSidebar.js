@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { PROFILE, HISTORY_ORDER } from "../../utils/consts";
+import React, { useContext } from "react";
+import { PROFILE, HISTORY_ORDER, USERS } from "../../utils/consts";
 import { NavLink } from "react-router-dom";
 import { Context } from "../..";
 import { observer } from "mobx-react-lite";
@@ -29,6 +29,19 @@ const ProfileSidebar = observer(() => {
       >
         Заказы
       </NavLink>
+
+      {user.user.role === "ADMIN" && (
+        <NavLink
+          to={USERS}
+          className={({ isActive }) =>
+            isActive
+              ? "profile__sidebar-link profile__sidebar-green"
+              : "profile__sidebar-link"
+          }
+        >
+          Пользователи
+        </NavLink>
+      )}
     </div>
   );
 });

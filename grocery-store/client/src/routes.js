@@ -17,6 +17,7 @@ import {
   REGISTRATION_ROUTE,
   RESET_PASS,
   SEARCH_PRODUCTS,
+  USERS,
 } from "./utils/consts";
 import Cart from "./pages/Cart";
 import Order from "./pages/Order";
@@ -27,6 +28,22 @@ import SearchProducts from "./pages/SearchProducts";
 import PasswordReset from "./pages/PasswordReset";
 import AdminAddProduct from "./pages/AdminAddProduct";
 import AdminUpdateProduct from "./pages/AdminUpdateProduct";
+import AdminUsers from "./pages/AdminUsers";
+
+export const adminRoutes = [
+  {
+    path: PRODUCT_ADD,
+    Component: AdminAddProduct,
+  },
+  {
+    path: PRODUCT_UPDATE + "/:name",
+    Component: AdminUpdateProduct,
+  },
+  {
+    path: USERS,
+    Component: AdminUsers,
+  },
+];
 
 export const authRoutes = [
   {
@@ -44,14 +61,6 @@ export const authRoutes = [
   {
     path: PRODUCT_ORDER + "/:id",
     Component: ProductsOrder,
-  },
-  {
-    path: PRODUCT_ADD,
-    Component: AdminAddProduct,
-  },
-  {
-    path: PRODUCT_UPDATE + "/:name",
-    Component: AdminUpdateProduct,
   },
 ];
 
