@@ -164,7 +164,6 @@ class UserController {
         { where: { phone: userPhone } }
       );
 
-      // пересоздаем токен и отправляем его в ответе
       const newToken = jwt.sign({ phone: userPhone }, process.env.SECRET_KEY, {
         expiresIn: "15m",
       });
@@ -177,8 +176,27 @@ class UserController {
 
   async getAll(req, res, next) {
     try {
-      const users = await User.findAll();
-      return res.json(users);
+      let { limit, page } = req.query;
+      page = page || 1;
+      limit = limit || 9;
+      let offset = page * limit - limit;
+
+      const users = await User.findAll({
+        where: {
+          role: ["COURIER", "USER"],
+        },
+        order: [["role", "DESC"]],
+        limit,
+        offset,
+      });
+
+      const count = await User.count({
+        where: {
+          role: ["COURIER", "USER"],
+        },
+      });
+
+      return res.json({ count, rows: users });
     } catch (e) {
       console.log(e);
       res.status(400).json({ message: "Ошибка запроса пользователей" });
@@ -218,14 +236,13 @@ class UserController {
   async update(req, res, next) {
     try {
       const { phone } = req.params;
-      const { first_name, second_name, password } = req.body;
+      const { first_name, second_name, password, role } = req.body;
 
-      // Получаем информацию о пользователе из JWT токена
       const token = req.headers.authorization.split(" ")[1];
       const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
       const userId = decodedToken.id;
+      const userRole = decodedToken.role;
 
-      // Получаем информацию о пользователе из базы данных
       const user = await User.findOne({ where: { phone } });
       if (!user) {
         return res
@@ -233,7 +250,7 @@ class UserController {
           .json({ message: `Пользователь c телефоном ${phone} не найден` });
       }
 
-      if (user.id !== userId) {
+      if (userRole !== "ADMIN" && user.id !== userId) {
         return res.status(401).json({
           message: "Нет прав на изменение данных другого пользователя",
         });
@@ -248,6 +265,9 @@ class UserController {
       if (password) {
         const hashPassword = await bcrypt.hash(password, 5);
         user.password = hashPassword;
+      }
+      if (userRole === "ADMIN" && role) {
+        user.role = role;
       }
 
       await user.save();
@@ -284,6 +304,34 @@ class UserController {
       return res
         .status(200)
         .json({ message: `Пользователь с ID ${user.id} был удален` });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ message: "Внутренняя ошибка сервера" });
+    }
+  }
+
+  async deleteUserForAdmin(req, res, next) {
+    try {
+      const token = req.headers.authorization.split(" ")[1];
+      const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
+      const phoneToken = decodedToken.phone;
+      const { phone } = req.params;
+
+      const user = await User.findOne({ where: { phone: phoneToken } });
+      if (!user) {
+        return res.status(404).json({ message: "Пользователь не найден" });
+      }
+
+      if (user.role !== "ADMIN") {
+        return res
+          .status(401)
+          .json({ message: "У вас нет доступа для выполнения этой операции" });
+      }
+
+      await User.destroy({ where: { phone } });
+      return res
+        .status(200)
+        .json({ message: `Пользователь с телефоном ${phone} был удален` });
     } catch (err) {
       console.log(err);
       return res.status(500).json({ message: "Внутренняя ошибка сервера" });
