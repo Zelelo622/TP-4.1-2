@@ -247,7 +247,7 @@ class UserController {
       if (!user) {
         return res
           .status(404)
-          .json({ message: Пользователь c телефоном ${phone} не найден });
+          .json({ message: `Пользователь c телефоном ${phone} не найден` });
       }
 
       if (userRole !== "ADMIN" && user.id !== userId) {
