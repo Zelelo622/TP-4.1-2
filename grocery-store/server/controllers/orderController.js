@@ -154,7 +154,7 @@ class OrderController {
       }
 
       const courier = await User.findByPk(courierId);
-      if (!courier) {
+      if (!courier && courierId !== null) {
         res.status(404).json({ message: "Курьер не найден" });
         return;
       }
