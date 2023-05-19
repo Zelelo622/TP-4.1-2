@@ -7,6 +7,7 @@ const {
 } = require("../models/models");
 const addressValidator = require("../middleware/orderMiddleware");
 const jwt = require("jsonwebtoken");
+const { Op } = require("sequelize");
 
 class OrderController {
   async create(req, res, next) {
@@ -47,12 +48,19 @@ class OrderController {
       limit = limit || 9;
       let offset = page * limit - limit;
       const orders = await Orders.findAll({
+        where: {
+          status: "В обработке",
+        },
         include: OrdersProduct,
         limit,
         offset,
       });
 
-      const count = await Orders.count({});
+      const count = await Orders.count({
+        where: {
+          status: "В обработке",
+        },
+      });
 
       res.json({ count, rows: orders });
     } catch (error) {
@@ -99,18 +107,59 @@ class OrderController {
     }
   }
 
-  async update(req, res, next) {
+  async updateStatus(req, res, next) {
     try {
       const orderId = req.params.id;
       const status = req.body.status;
 
       const order = await Orders.findByPk(orderId);
       if (!order) {
-        res.status(404).json({ success: false, message: "Заказ не найден" });
+        res.status(404).json({ message: "Заказ не найден" });
         return;
       }
 
       order.status = status;
+      await order.save();
+
+      res.json(order);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async updateCourier(req, res, next) {
+    try {
+      const orderId = req.params.id;
+      const courierId = req.body.courierId;
+
+      const order = await Orders.findByPk(orderId);
+      if (!order) {
+        res.status(404).json({ message: "Заказ не найден" });
+        return;
+      }
+
+      const existingOrderWithCourier = await Orders.findOne({
+        where: {
+          courier_id: courierId,
+          id: {
+            [Op.ne]: orderId,
+          },
+        },
+      });
+      if (existingOrderWithCourier) {
+        res
+          .status(400)
+          .json({ message: "Курьер уже назначен для другого заказа" });
+        return;
+      }
+
+      const courier = await User.findByPk(courierId);
+      if (!courier) {
+        res.status(404).json({ message: "Курьер не найден" });
+        return;
+      }
+
+      order.courier_id = courierId;
       await order.save();
 
       res.json(order);
