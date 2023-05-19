@@ -33,10 +33,6 @@ const OrderTable = observer(
       }
     };
 
-    const availableCouriers = couriers.filter(
-      (courier) => !order.orders.some((o) => o.courier_id === courier.id)
-    );
-
     return (
       <>
         <Table className="table-order">
@@ -108,7 +104,7 @@ const OrderTable = observer(
                           }
                         >
                           <option value="">Выберите курьера</option>
-                          {availableCouriers.map((courier) => (
+                          {couriers.map((courier) => (
                             <option key={courier.id} value={courier.id}>
                               {courier.second_name} {courier.first_name}
                             </option>

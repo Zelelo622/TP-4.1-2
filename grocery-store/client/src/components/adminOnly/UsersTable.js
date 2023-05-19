@@ -1,10 +1,11 @@
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
 import { Table, Form, Button } from "react-bootstrap";
-import { deleteUser, deleteUserForAdmin, updateUser } from "../../http/userAPI";
+import { deleteUserForAdmin, updateUser } from "../../http/userAPI";
 
 const UsersTable = observer(({ user }) => {
   const startIndex = (user.page - 1) * user.limit;
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleRoleChange = async (e, phone) => {
     const newRole = e.target.value;
@@ -18,8 +19,8 @@ const UsersTable = observer(({ user }) => {
       });
       user.setUsers(updatedUsers);
       window.location.reload();
-    } catch (error) {
-      console.log(error);
+    } catch (e) {
+      setErrorMessage(e.response.data.message);
     }
   };
 
@@ -64,7 +65,7 @@ const UsersTable = observer(({ user }) => {
               <tr key={userItem.id} className="table-order__row">
                 <td className="table-order__data">{userIndex}</td>
                 <td className="table-order__data table-order__data--name">
-                  {userItem.first_name} {userItem.second_name}
+                  {userItem.second_name} {userItem.first_name}
                 </td>
                 <td className="table-order__data">{userItem.phone}</td>
                 <td className="table-order__data table-order__data--role">
@@ -113,6 +114,7 @@ const UsersTable = observer(({ user }) => {
           })}
         </tbody>
       </Table>
+      {errorMessage && <div className="error-message">{errorMessage}</div>}
     </>
   );
 });
