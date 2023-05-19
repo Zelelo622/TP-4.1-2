@@ -44,14 +44,19 @@ class OrderController {
   async getAll(req, res, next) {
     try {
       let { limit, page } = req.query;
-      page = page || 1;
-      limit = limit || 9;
+      page = page  1;
+      limit = limit  9;
       let offset = page * limit - limit;
+
       const orders = await Orders.findAll({
         where: {
           status: "В обработке",
         },
         include: OrdersProduct,
+        order: [
+          ["courier_id", "DESC"],
+          ["createdAt", "ASC"],
+        ],
         limit,
         offset,
       });
@@ -140,12 +145,14 @@ class OrderController {
 
       const existingOrderWithCourier = await Orders.findOne({
         where: {
-          courier_id: courierId,
-          id: {
-            [Op.ne]: orderId,
-          },
+          [Op.and]: [
+            { courier_id: courierId },
+            { courier_id: { [Op.not]: null } },
+            { id: { [Op.ne]: orderId } },
+          ],
         },
       });
+
       if (existingOrderWithCourier) {
         res
           .status(400)
