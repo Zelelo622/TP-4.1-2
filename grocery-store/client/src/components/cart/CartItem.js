@@ -23,7 +23,6 @@ const CartItem = ({
     increaseProduct(product.id, newQuantity);
   };
 
-  // Удаление товара из корзины
   const handleRemove = () => {
     removeFromCart(product.id);
   };

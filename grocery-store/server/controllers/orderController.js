@@ -49,11 +49,9 @@ class OrderController {
       let offset = page * limit - limit;
 
       const orders = await Orders.findAll({
-        where: {
-          status: "В обработке",
-        },
         include: OrdersProduct,
         order: [
+          ["status", "ASC"],
           ["courier_id", "DESC"],
           ["createdAt", "ASC"],
         ],
@@ -61,11 +59,7 @@ class OrderController {
         offset,
       });
 
-      const count = await Orders.count({
-        where: {
-          status: "В обработке",
-        },
-      });
+      const count = await Orders.count({});
 
       res.json({ count, rows: orders });
     } catch (error) {
@@ -99,12 +93,53 @@ class OrderController {
 
       const orders = await Orders.findAll({
         where: { userId: user.id },
+        order: [["createdAt", "DESC"]],
         include: OrdersProduct,
         limit,
         offset,
       });
 
       const count = await Orders.count({ where: { userId: user.id } });
+
+      res.json({ count, rows: orders });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getOrdersByCourierId(req, res, next) {
+    try {
+      let { limit, page } = req.query;
+      page = page || 1;
+      limit = limit || 9;
+      let offset = page * limit - limit;
+
+      const token = req.headers.authorization.split(" ")[1];
+      const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
+      const userId = decodedToken.id;
+
+      const courier = await User.findOne({
+        where: { id: userId, role: "COURIER" },
+      });
+
+      if (!courier) {
+        return res
+          .status(401)
+          .json({ message: "Нет прав на просмотр данных другого курьера" });
+      }
+
+      const orders = await Orders.findAll({
+        where: { courier_id: userId },
+        include: OrdersProduct,
+        order: [
+          ["status", "ASC"],
+          ["createdAt", "ASC"],
+        ],
+        limit,
+        offset,
+      });
+
+      const count = await Orders.count({ where: { courier_id: userId } });
 
       res.json({ count, rows: orders });
     } catch (error) {

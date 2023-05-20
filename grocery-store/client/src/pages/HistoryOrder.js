@@ -5,6 +5,7 @@ import ProfileSidebar from "../components/profile/ProfileSidebar";
 import Footer from "../components/Footer";
 import {
   fetchAllOrders,
+  fetchCourierOrders,
   fetchOneOrder,
   fetchOrderProducts,
 } from "../http/orderAPI";
@@ -18,6 +19,7 @@ import { fetchAllCouriers } from "../http/userAPI";
 const HistoryOrder = observer(() => {
   const { phone } = useParams();
   const { order, productOrder, user } = useContext(Context);
+  const [showAdminColumn, setShowAdminColumn] = useState(false);
   const [showCourierColumn, setShowCourierColumn] = useState(false);
   const [couriers, setCouriers] = useState([]);
 
@@ -32,11 +34,17 @@ const HistoryOrder = observer(() => {
         const data = await fetchAllOrders(order.page, 3);
         order.setOrders(data.rows);
         order.setTotalCount(data.count);
+        setShowAdminColumn(true);
+      } else if (user.user.role === "COURIER") {
+        const data = await fetchCourierOrders(order.page, 3);
+        order.setOrders(data.rows);
+        order.setTotalCount(data.count);
         setShowCourierColumn(true);
       } else {
         const data = await fetchOneOrder(phone, order.page, 3);
         order.setOrders(data.rows);
         order.setTotalCount(data.count);
+        setShowAdminColumn(false);
         setShowCourierColumn(false);
       }
     };
@@ -50,10 +58,10 @@ const HistoryOrder = observer(() => {
         setCouriers(response);
       }
     };
-    if (showCourierColumn) {
+    if (showAdminColumn) {
       fetchCouriers();
     }
-  }, [showCourierColumn]);
+  }, [showAdminColumn]);
 
   return (
     <>
@@ -70,6 +78,7 @@ const HistoryOrder = observer(() => {
                     <OrderTable
                       order={order}
                       onViewProductsClick={handleTableProductsClick}
+                      showAdminColumn={showAdminColumn}
                       showCourierColumn={showCourierColumn}
                       couriers={couriers}
                     />

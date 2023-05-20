@@ -27,7 +27,7 @@ const Product = () => {
             {loading ? (
               <div><Spinner animation={"grow"} /></div>
             ) : (
-              <ProductDetails product={product} />
+              <ProductDetails productItem={product} />
             )}
           </Container>
         </main>

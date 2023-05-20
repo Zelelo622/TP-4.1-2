@@ -8,7 +8,7 @@ const ProductList = observer(() => {
   return (
     <ul className="product-list">
       {product.products.map((product) => (
-        <ProductCard key={product.id} product={product} />
+        <ProductCard key={product.id} productItem={product} />
       ))}
     </ul>
   );
