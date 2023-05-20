@@ -121,6 +121,32 @@
   display: none;
 }
 
+.mobile-nav-item {
+  position: relative;
+}
+
+.nav__item {
+  position: relative;
+}
+
+.header__cart-counter {
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 18px;
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 17px;
+  height: 17px;
+  padding: 10px;
+  border-radius: 50%;
+  background-color: #00a54a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+
 @media (max-width: 991px) {
   .nav {
     display: none;

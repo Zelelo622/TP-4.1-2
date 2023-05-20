@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import "../assets/styles/Header.css";
 import { Container } from "react-bootstrap";
 import {
@@ -44,7 +44,13 @@ const Header = observer(() => {
     product.setTotalCount(data.products.count);
   }
 
-  const isAdminOrCourier = user.user.role === "ADMIN" || user.user.role === "COURIER";
+  useEffect(() => {
+    const totalQuantity = Number(localStorage.getItem("totalQuantity")) || 0;
+    product.setTotalQuantity(totalQuantity);
+  }, []);
+
+  const isAdminOrCourier =
+    user.user.role === "ADMIN" || user.user.role === "COURIER";
 
   return (
     <>
@@ -77,6 +83,11 @@ const Header = observer(() => {
                         <li className="nav__item">
                           <Link to={CART}>
                             <img src={CartSvg} alt="Корзина" />
+                            {product.totalQuantity > 0 && (
+                              <span className="header__cart-counter">
+                                {product.totalQuantity}
+                              </span>
+                            )}
                           </Link>
                         </li>
                       )}
@@ -96,6 +107,11 @@ const Header = observer(() => {
                         <li className="nav__item">
                           <Link to={CART}>
                             <img src={CartSvg} alt="Корзина" />
+                            {product.totalQuantity > 0 && (
+                              <span className="header__cart-counter">
+                                {product.totalQuantity}
+                              </span>
+                            )}
                           </Link>
                         </li>
                       )}
@@ -133,8 +149,13 @@ const Header = observer(() => {
             {user.isAuth ? (
               <>
                 {!isAdminOrCourier && (
-                  <li>
+                  <li className="mobile-nav-item">
                     <Link to={CART}>Корзина</Link>
+                    {product.totalQuantity > 0 && (
+                      <span className="header__cart-counter">
+                        {product.totalQuantity}
+                      </span>
+                    )}
                   </li>
                 )}
                 <li>
@@ -144,8 +165,13 @@ const Header = observer(() => {
             ) : (
               <>
                 {!isAdminOrCourier && (
-                  <li>
+                  <li className="mobile-nav-item">
                     <Link to={CART}>Корзина</Link>
+                    {product.totalQuantity > 0 && (
+                      <span className="header__cart-counter">
+                        {product.totalQuantity}
+                      </span>
+                    )}
                   </li>
                 )}
                 <li>

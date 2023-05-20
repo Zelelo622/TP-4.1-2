@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import "../assets/styles/Home.css";
@@ -14,13 +14,16 @@ import "../assets/styles/Cart.css";
 import OrderSummary from "../components/cart/OrderSummary";
 import { HOME } from "../utils/consts";
 import { Link } from "react-router-dom";
+import { observer } from "mobx-react-lite";
+import { Context } from "..";
 
-const Cart = () => {
+const Cart = observer(() => {
   const [cartItems, setCartItems] = useState(
     JSON.parse(localStorage.getItem("cartItems")) || []
   );
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
+  const { product } = useContext(Context);
 
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
@@ -64,6 +67,7 @@ const Cart = () => {
     });
     setTotalQuantity(quantity);
     setTotalPrice(price);
+    product.setTotalQuantity(totalQuantity);
   };
 
   return (
@@ -105,6 +109,6 @@ const Cart = () => {
       </div>
     </>
   );
-};
+});
 
 export default Cart;
