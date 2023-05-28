@@ -2,7 +2,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { User, Orders } = require("../models/models");
 const { validationResult } = require("express-validator");
-const validator = require("validator");
 
 const generateJwt = (id, first_name, second_name, phone, role) => {
   return jwt.sign(
@@ -36,7 +35,7 @@ class UserController {
       const candidate = await User.findOne({ where: { phone } });
       if (candidate) {
         return res
-          .status(400)
+          .status(409)
           .json({ phone: "Пользователь с таким телефоном уже существует" });
       }
       const hashPassword = await bcrypt.hash(password, 5);
@@ -69,7 +68,7 @@ class UserController {
       const user = await User.findOne({ where: { phone } });
       if (!user) {
         return res
-          .status(400)
+          .status(404)
           .json({ phone: `Пользователь c телефоном ${phone} не найден` });
       }
       let comparePassword = bcrypt.compareSync(password, user.password);
@@ -199,7 +198,7 @@ class UserController {
       return res.json({ count, rows: users });
     } catch (e) {
       console.log(e);
-      res.status(400).json({ message: "Ошибка запроса пользователей" });
+      res.status(500).json({ message: "Ошибка запроса пользователей" });
     }
   }
 
@@ -213,7 +212,7 @@ class UserController {
       return res.json(users);
     } catch (e) {
       console.log(e);
-      res.status(400).json({ message: "Ошибка запроса пользователей" });
+      res.status(500).json({ message: "Ошибка получения курьеров" });
     }
   }
 
@@ -229,7 +228,7 @@ class UserController {
       return res.json(user);
     } catch (e) {
       console.log(e);
-      res.status(400).json({ message: "Get user error" });
+      res.status(500).json({ message: "Ошибка получения пользователя" });
     }
   }
 
@@ -251,7 +250,7 @@ class UserController {
       }
 
       if (userRole !== "ADMIN" && user.id !== userId) {
-        return res.status(401).json({
+        return res.status(403).json({
           message: "Нет прав на изменение данных другого пользователя",
         });
       }
@@ -294,7 +293,7 @@ class UserController {
       return res.json({ token: newToken });
     } catch (e) {
       console.log(e);
-      res.status(400).json({ message: "Ошибка обновления данных" });
+      res.status(500).json({ message: "Ошибка обновления данных" });
     }
   }
 
@@ -318,7 +317,6 @@ class UserController {
         .status(200)
         .json({ message: `Пользователь с ID ${user.id} был удален` });
     } catch (err) {
-      console.log(err);
       return res.status(500).json({ message: "Внутренняя ошибка сервера" });
     }
   }

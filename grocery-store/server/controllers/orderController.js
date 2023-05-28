@@ -5,9 +5,7 @@ const {
   User,
   Category,
 } = require("../models/models");
-const addressValidator = require("../middleware/orderMiddleware");
 const jwt = require("jsonwebtoken");
-const { Op } = require("sequelize");
 
 class OrderController {
   async create(req, res, next) {
@@ -37,7 +35,7 @@ class OrderController {
 
       res.json({ order: order });
     } catch (error) {
-      next(error);
+      return res.status(500).json({ message: "Внутренняя ошибка сервера" });
     }
   }
 
@@ -63,7 +61,7 @@ class OrderController {
 
       res.json({ count, rows: orders });
     } catch (error) {
-      next(error);
+      return res.status(500).json({ message: "Внутренняя ошибка сервера" });
     }
   }
 
@@ -103,7 +101,7 @@ class OrderController {
 
       res.json({ count, rows: orders });
     } catch (error) {
-      next(error);
+      return res.status(500).json({ message: "Внутренняя ошибка сервера" });
     }
   }
 
@@ -143,7 +141,7 @@ class OrderController {
 
       res.json({ count, rows: orders });
     } catch (error) {
-      next(error);
+      return res.status(500).json({ message: "Внутренняя ошибка сервера" });
     }
   }
 
@@ -163,7 +161,7 @@ class OrderController {
 
       res.json(order);
     } catch (error) {
-      next(error);
+      return res.status(500).json({ message: "Внутренняя ошибка сервера" });
     }
   }
 
@@ -189,7 +187,7 @@ class OrderController {
 
       res.json(order);
     } catch (error) {
-      next(error);
+      return res.status(500).json({ message: "Внутренняя ошибка сервера" });
     }
   }
 
@@ -212,7 +210,7 @@ class OrderController {
 
       res.json({ success: true });
     } catch (error) {
-      next(error);
+      return res.status(500).json({ message: "Внутренняя ошибка сервера" });
     }
   }
 
@@ -228,7 +226,11 @@ class OrderController {
       const order = await Orders.findByPk(id);
 
       if (!order) {
-        return res.status(404).json({ message: "Заказ не найден" });
+        if (req.orderNotFoundError) {
+          return res.status(404).json({ message: req.orderNotFoundError });
+        } else {
+          return res.status(404).json({ message: "Заказ не найден" });
+        }
       }
 
       if (
@@ -254,7 +256,8 @@ class OrderController {
 
       res.status(200).json(orderProducts);
     } catch (error) {
-      next(error);
+      next(error)
+      return res.status(500).json({ message: "Внутренняя ошибка сервера" });
     }
   }
 }

@@ -2,7 +2,6 @@ const { Product } = require("../models/models");
 const { Op, Sequelize } = require("sequelize");
 const uuid = require("uuid");
 const path = require("path");
-const ApiError = require("../error/ApiError");
 const mime = require("mime");
 
 class ProductController {
@@ -12,40 +11,56 @@ class ProductController {
     page = page || 1;
     limit = limit || 9;
     let offset = page * limit - limit;
-
+  
     const filter = {};
-
+  
     if (priceRange) {
       const [priceMin, priceMax] = priceRange.split("-");
       filter.price = {
         [Op.between]: [priceMin, priceMax],
       };
     }
-
+  
     if (isVegetarian === "true") {
       filter.vegetarian = true;
     } else if (isVegetarian === "false") {
       filter.vegetarian = false;
     }
-
+  
     if (calRange) {
       const [calMin, calMax] = calRange.split("-");
       filter.calories = {
         [Op.between]: [calMin, calMax],
       };
     }
-
+  
     try {
       const products = await Product.findAndCountAll({
         where: { categoryId, ...filter },
         limit,
         offset,
       });
-      res.json(products);
+      
+      const minPrice = await Product.min("price", {
+        where: { categoryId },
+      });
+      const maxPrice = await Product.max("price", {
+        where: { categoryId },
+      });
+
+      const minCalories = await Product.min("calories", {
+        where: { categoryId },
+      });
+      const maxCalories = await Product.max("calories", {
+        where: { categoryId },
+      });
+  
+      res.json({ products, minPrice, maxPrice, minCalories, maxCalories });
     } catch (e) {
-      next(ApiError.badRequest(e.message));
+      return res.status(500).json({ message: "Внутренняя ошибка сервера" });
     }
   }
+  
 
   async create(req, res, next) {
     try {
@@ -135,109 +150,121 @@ class ProductController {
 
       return res.json(product);
     } catch (e) {
-      next(ApiError.badRequest(e.message));
+      return res.status(500).json({ error: "Внутренняя ошибка сервера" });
     }
-  }
-
-  async getAll(req, res) {
-    const products = await Product.findAll();
-    return res.json(products);
   }
 
   async getOne(req, res) {
-    const name = req.params.name;
-    const product = await Product.findOne({
-      where: { name },
-    });
-    return res.json(product);
+    try {
+      const name = req.params.name;
+      const product = await Product.findOne({
+        where: { name },
+      });
+
+      if (!product) {
+        return res.status(404).json({ error: "Товар не найден" });
+      }
+
+      return res.json(product);
+    } catch (error) {
+      return res.status(500).json({ error: "Внутренняя ошибка сервера" });
+    }
   }
 
   async update(req, res) {
-    const { name } = req.params;
-    const {
-      newName,
-      price,
-      composition,
-      protein,
-      fat,
-      carbohydrates,
-      calories,
-      weight,
-      vegetarian,
-    } = req.body;
-    const imgFile = req.files && req.files.img;
+    try {
+      const { name } = req.params;
+      const {
+        newName,
+        price,
+        composition,
+        protein,
+        fat,
+        carbohydrates,
+        calories,
+        weight,
+        vegetarian,
+      } = req.body;
+      const imgFile = req.files && req.files.img;
 
-    let productData = {};
+      let productData = {};
 
-    if (newName && newName.trim() !== name.trim()) {
-      const trimmedNewName = newName.trim();
-      const existingProduct = await Product.findOne({
-        where: { name: trimmedNewName },
+      if (newName && newName.trim() !== name.trim()) {
+        const trimmedNewName = newName.trim();
+        const existingProduct = await Product.findOne({
+          where: { name: trimmedNewName },
+        });
+        if (existingProduct) {
+          return res.status(400).json({ error: "Имя уже существует." });
+        }
+      }
+
+      if (imgFile) {
+        const fileExtension = mime.getExtension(imgFile.mimetype);
+        if (fileExtension !== "jpg" && fileExtension !== "jpeg") {
+          return res.status(400).json({ error: "Выберите файл формата JPG." });
+        }
+      }
+
+      if (
+        !newName ||
+        !price ||
+        !composition ||
+        !protein ||
+        !fat ||
+        !carbohydrates ||
+        !calories ||
+        !weight ||
+        !vegetarian
+      ) {
+        return res
+          .status(400)
+          .json({ error: "Заполните все обязательные поля." });
+      }
+
+      if (
+        price < 0 ||
+        protein < 0 ||
+        fat < 0 ||
+        carbohydrates < 0 ||
+        calories < 0 ||
+        weight < 0
+      ) {
+        return res.status(400).json({ error: "Введите положительное число." });
+      }
+
+      productData = {
+        name: newName,
+        price,
+        composition,
+        protein,
+        fat,
+        carbohydrates,
+        calories,
+        weight,
+        vegetarian,
+      };
+
+      const product = await Product.update(productData, {
+        where: { name },
       });
-      if (existingProduct) {
-        return res.status(400).json({ error: "Имя уже существует." });
-      }
+
+      return res.json(product);
+    } catch (e) {
+      return res.status(500).json({ error: "Внутренняя ошибка сервера" });
     }
-
-    if (imgFile) {
-      const fileExtension = mime.getExtension(imgFile.mimetype);
-      if (fileExtension !== "jpg" && fileExtension !== "jpeg") {
-        return res.status(400).json({ error: "Выберите файл формата JPG." });
-      }
-    }
-
-    if (
-      !newName ||
-      !price ||
-      !composition ||
-      !protein ||
-      !fat ||
-      !carbohydrates ||
-      !calories ||
-      !weight ||
-      !vegetarian
-    ) {
-      return res
-        .status(400)
-        .json({ error: "Заполните все обязательные поля." });
-    }
-
-    if (
-      price < 0 ||
-      protein < 0 ||
-      fat < 0 ||
-      carbohydrates < 0 ||
-      calories < 0 ||
-      weight < 0
-    ) {
-      return res.status(400).json({ error: "Введите положительное число." });
-    }
-
-    productData = {
-      name: newName,
-      price,
-      composition,
-      protein,
-      fat,
-      carbohydrates,
-      calories,
-      weight,
-      vegetarian,
-    };
-
-    const product = await Product.update(productData, {
-      where: { name },
-    });
-
-    return res.json(product);
   }
 
   async delete(req, res) {
-    const { name } = req.params;
-    const product = Product.destroy({
-      where: { name },
-    });
-    return res.json(product);
+    try {
+      const { name } = req.params;
+      const product = Product.destroy({
+        where: { name },
+      });
+      return res.json(product);
+    } catch (err) {
+      return res.status(500).json({ message: "Внутренняя ошибка сервера" });
+    }
   }
 
   async search(req, res, next) {
@@ -282,7 +309,7 @@ class ProductController {
       });
       res.status(200).json({ products });
     } catch (error) {
-      next(error);
+      return res.status(500).json({ message: "Внутренняя ошибка сервера" });
     }
   }
 }
