@@ -5,6 +5,11 @@ import { Context } from "../..";
 
 const ProductList = observer(() => {
   const { product } = useContext(Context);
+
+  if (product.products.length === 0) {
+    return <h3 className="cart__text">Товар не найден</h3>
+  }
+
   return (
     <ul className="product-list">
       {product.products.map((product) => (

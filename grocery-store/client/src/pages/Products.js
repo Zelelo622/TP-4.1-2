@@ -27,7 +27,6 @@ const Products = observer(() => {
   const [loading, setLoading] = useState(true);
 
   const fetchProducts = async () => {
-    category.setCategoryId(null);
     try {
       const data = await fetchProductByCategory(
         categoryId,
