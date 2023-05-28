@@ -15,7 +15,7 @@ class CategoryController {
 
             return res.json(category);
         } catch (e) {
-            next(ApiError.badRequest(e.message));
+            console.error(ApiError.internal(e.message));
         }
     }
 
@@ -31,6 +31,10 @@ class CategoryController {
                 where: { id }
             }
         );
+        
+        if (!category) {
+            return res.status(404).json({message: "Категория не найдена"})
+        }
         return res.json(category);
     }
 }
