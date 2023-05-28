@@ -16,7 +16,23 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.resolve(__dirname, 'static')));
 app.use(fileupload({}));
+
 app.use('/api', router);
+
+// Swagger options
+const swaggerOptions = {
+  swaggerDefinition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'DIEGO API',
+      version: '1.0.0',
+      description: 'API documentation for DIEGO supermarket',
+    },
+  },
+  apis: ['./swagger/*.yaml'],
+};
+const specs = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 const start = async () => {
   try {

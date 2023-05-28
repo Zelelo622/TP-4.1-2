@@ -1,3 +1,4 @@
+const ApiError = require("../error/ApiError");
 const {
   Orders,
   OrdersProduct,
@@ -34,8 +35,8 @@ class OrderController {
       }
 
       res.json({ order: order });
-    } catch (error) {
-      return res.status(500).json({ message: "Внутренняя ошибка сервера" });
+    } catch (e) {
+      console.error(ApiError.internal(e.message));
     }
   }
 
@@ -60,8 +61,8 @@ class OrderController {
       const count = await Orders.count({});
 
       res.json({ count, rows: orders });
-    } catch (error) {
-      return res.status(500).json({ message: "Внутренняя ошибка сервера" });
+    } catch (e) {
+      console.error(ApiError.internal(e.message));
     }
   }
 
@@ -99,9 +100,13 @@ class OrderController {
 
       const count = await Orders.count({ where: { userId: user.id } });
 
+      if (count === 0) {
+        return res.status(404).json({ message: "Заказы не найдены" });
+      }
+
       res.json({ count, rows: orders });
-    } catch (error) {
-      return res.status(500).json({ message: "Внутренняя ошибка сервера" });
+    } catch (e) {
+      console.error(ApiError.internal(e.message));
     }
   }
 
@@ -140,8 +145,8 @@ class OrderController {
       const count = await Orders.count({ where: { courier_id: userId } });
 
       res.json({ count, rows: orders });
-    } catch (error) {
-      return res.status(500).json({ message: "Внутренняя ошибка сервера" });
+    } catch (e) {
+      console.error(ApiError.internal(e.message));
     }
   }
 
@@ -152,16 +157,15 @@ class OrderController {
 
       const order = await Orders.findByPk(orderId);
       if (!order) {
-        res.status(404).json({ message: "Заказ не найден" });
-        return;
+        return res.status(404).json({ message: "Заказ не найден" });
       }
 
       order.status = status;
       await order.save();
 
       res.json(order);
-    } catch (error) {
-      return res.status(500).json({ message: "Внутренняя ошибка сервера" });
+    } catch (e) {
+      console.error(ApiError.internal(e.message));
     }
   }
 
@@ -172,22 +176,20 @@ class OrderController {
 
       const order = await Orders.findByPk(orderId);
       if (!order) {
-        res.status(404).json({ message: "Заказ не найден" });
-        return;
+        return res.status(404).json({ message: "Заказ не найден" });
       }
 
       const courier = await User.findByPk(courierId);
       if (!courier && courierId !== null) {
-        res.status(404).json({ message: "Курьер не найден" });
-        return;
+        return res.status(404).json({ message: "Курьер не найден" });
       }
 
       order.courier_id = courierId;
       await order.save();
 
       res.json(order);
-    } catch (error) {
-      return res.status(500).json({ message: "Внутренняя ошибка сервера" });
+    } catch (e) {
+      console.error(ApiError.internal(e.message));
     }
   }
 
@@ -196,8 +198,7 @@ class OrderController {
       const orderId = req.params.id;
       const order = await Orders.findByPk(orderId);
       if (!order) {
-        res.status(404).json({ message: "Заказ не найден" });
-        return;
+        return res.status(404).json({ message: "Заказ не найден" });
       }
 
       await OrdersProduct.destroy({
@@ -208,9 +209,9 @@ class OrderController {
 
       await order.destroy();
 
-      res.json({ success: true });
-    } catch (error) {
-      return res.status(500).json({ message: "Внутренняя ошибка сервера" });
+      return res.status(200).json({ success: true });
+    } catch (e) {
+      console.error(ApiError.internal(e.message));
     }
   }
 
@@ -255,9 +256,8 @@ class OrderController {
       });
 
       res.status(200).json(orderProducts);
-    } catch (error) {
-      next(error)
-      return res.status(500).json({ message: "Внутренняя ошибка сервера" });
+    } catch (e) {
+      console.error(ApiError.internal(e.message));
     }
   }
 }

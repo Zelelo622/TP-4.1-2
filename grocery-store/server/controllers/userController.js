@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { User, Orders } = require("../models/models");
 const { validationResult } = require("express-validator");
+const ApiError = require("../error/ApiError");
 
 const generateJwt = (id, first_name, second_name, phone, role) => {
   return jwt.sign(
@@ -57,7 +58,7 @@ class UserController {
       );
       return res.json({ token });
     } catch (e) {
-      console.log(e);
+      console.error(ApiError.badRequest(e.message));
       res.status(400).json({ message: "Ошибка регистрации" });
     }
   }
@@ -84,7 +85,7 @@ class UserController {
       );
       return res.json({ token });
     } catch (e) {
-      console.log(e);
+      console.error(ApiError.badRequest(e.message));
       res.status(400).json({ message: "Ошибка авторизации" });
     }
   }
@@ -131,9 +132,8 @@ class UserController {
       });
 
       res.json({ token });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Ошибка сервера" });
+    } catch (e) {
+      console.error(ApiError.internal(e.message));
     }
   }
 
@@ -167,9 +167,8 @@ class UserController {
         expiresIn: "15m",
       });
       res.json({ message: "Пароль успешно изменен", token: newToken });
-    } catch (error) {
-      console.error(error);
-      res.status(404).json({ message: "Неверный токен" });
+    } catch (e) {
+      console.error(ApiError.internal(e.message));
     }
   }
 
@@ -197,8 +196,7 @@ class UserController {
 
       return res.json({ count, rows: users });
     } catch (e) {
-      console.log(e);
-      res.status(500).json({ message: "Ошибка запроса пользователей" });
+      console.error(ApiError.internal(e.message));
     }
   }
 
@@ -211,8 +209,7 @@ class UserController {
       });
       return res.json(users);
     } catch (e) {
-      console.log(e);
-      res.status(500).json({ message: "Ошибка получения курьеров" });
+      console.error(ApiError.internal(e.message));
     }
   }
 
@@ -227,8 +224,7 @@ class UserController {
       }
       return res.json(user);
     } catch (e) {
-      console.log(e);
-      res.status(500).json({ message: "Ошибка получения пользователя" });
+      console.error(ApiError.internal(e.message));
     }
   }
 
@@ -292,8 +288,7 @@ class UserController {
       );
       return res.json({ token: newToken });
     } catch (e) {
-      console.log(e);
-      res.status(500).json({ message: "Ошибка обновления данных" });
+      console.error(ApiError.internal(e.message));
     }
   }
 
@@ -309,15 +304,13 @@ class UserController {
       }
       if (user.id !== userId) {
         return res
-          .status(401)
+          .status(403)
           .json({ message: "У вас нет доступа для выполнения этой операции" });
       }
       await User.destroy({ where: { id: user.id } });
-      return res
-        .status(200)
-        .json({ message: `Пользователь с ID ${user.id} был удален` });
-    } catch (err) {
-      return res.status(500).json({ message: "Внутренняя ошибка сервера" });
+      return res.status(200).json({ success: true });
+    } catch (e) {
+      console.error(ApiError.internal(e.message));
     }
   }
 
@@ -335,17 +328,14 @@ class UserController {
 
       if (user.role !== "ADMIN") {
         return res
-          .status(401)
+          .status(403)
           .json({ message: "У вас нет доступа для выполнения этой операции" });
       }
 
       await User.destroy({ where: { phone } });
-      return res
-        .status(200)
-        .json({ message: `Пользователь с телефоном ${phone} был удален` });
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({ message: "Внутренняя ошибка сервера" });
+      return res.status(200).json({ success: true });
+    } catch (e) {
+      console.error(ApiError.internal(e.message));
     }
   }
 }

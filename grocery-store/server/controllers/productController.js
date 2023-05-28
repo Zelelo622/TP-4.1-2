@@ -3,6 +3,7 @@ const { Op, Sequelize } = require("sequelize");
 const uuid = require("uuid");
 const path = require("path");
 const mime = require("mime");
+const ApiError = require("../error/ApiError");
 
 class ProductController {
   async getProductsByCategory(req, res, next) {
@@ -11,36 +12,36 @@ class ProductController {
     page = page || 1;
     limit = limit || 9;
     let offset = page * limit - limit;
-  
+
     const filter = {};
-  
+
     if (priceRange) {
       const [priceMin, priceMax] = priceRange.split("-");
       filter.price = {
         [Op.between]: [priceMin, priceMax],
       };
     }
-  
+
     if (isVegetarian === "true") {
       filter.vegetarian = true;
     } else if (isVegetarian === "false") {
       filter.vegetarian = false;
     }
-  
+
     if (calRange) {
       const [calMin, calMax] = calRange.split("-");
       filter.calories = {
         [Op.between]: [calMin, calMax],
       };
     }
-  
+
     try {
       const products = await Product.findAndCountAll({
         where: { categoryId, ...filter },
         limit,
         offset,
       });
-      
+
       const minPrice = await Product.min("price", {
         where: { categoryId },
       });
@@ -54,13 +55,12 @@ class ProductController {
       const maxCalories = await Product.max("calories", {
         where: { categoryId },
       });
-  
+
       res.json({ products, minPrice, maxPrice, minCalories, maxCalories });
     } catch (e) {
-      return res.status(500).json({ message: "Внутренняя ошибка сервера" });
+      console.error(ApiError.internal(e.message));
     }
   }
-  
 
   async create(req, res, next) {
     try {
@@ -150,7 +150,7 @@ class ProductController {
 
       return res.json(product);
     } catch (e) {
-      return res.status(500).json({ error: "Внутренняя ошибка сервера" });
+      console.error(ApiError.internal(e.message));
     }
   }
 
@@ -166,8 +166,8 @@ class ProductController {
       }
 
       return res.json(product);
-    } catch (error) {
-      return res.status(500).json({ error: "Внутренняя ошибка сервера" });
+    } catch (e) {
+      console.error(ApiError.internal(e.message));
     }
   }
 
@@ -251,7 +251,7 @@ class ProductController {
 
       return res.json(product);
     } catch (e) {
-      return res.status(500).json({ error: "Внутренняя ошибка сервера" });
+      console.error(ApiError.internal(e.message));
     }
   }
 
@@ -261,55 +261,82 @@ class ProductController {
       const product = Product.destroy({
         where: { name },
       });
-      return res.json(product);
+      return res.status(200).json({ success: true });
     } catch (err) {
-      return res.status(500).json({ message: "Внутренняя ошибка сервера" });
+      console.error(ApiError.internal(e.message));
     }
   }
 
   async search(req, res, next) {
+    let { name, priceRange, isVegetarian, calRange, limit, page } = req.query;
+    page = page || 1;
+    limit = limit || 9;
+    let offset = page * limit - limit;
+    name = name.replace(/\s+$/, "") + "%";
+
+    const filter = {};
+
+    if (priceRange) {
+      const [priceMin, priceMax] = priceRange.split("-");
+      filter.price = {
+        [Op.between]: [priceMin, priceMax],
+      };
+    }
+
+    if (isVegetarian === "true") {
+      filter.vegetarian = true;
+    } else if (isVegetarian === "false") {
+      filter.vegetarian = false;
+    }
+
+    if (calRange) {
+      const [calMin, calMax] = calRange.split("-");
+      filter.calories = {
+        [Op.between]: [calMin, calMax],
+      };
+    }
+
     try {
-      let { name, priceRange, isVegetarian, calRange, limit, page } = req.query;
-      page = page || 1;
-      limit = limit || 9;
-      let offset = page * limit - limit;
-      name = name.replace(/\s+$/, "") + "%";
-
-      const filter = {};
-
-      if (priceRange) {
-        const [priceMin, priceMax] = priceRange.split("-");
-        filter.price = {
-          [Op.between]: [priceMin, priceMax],
-        };
-      }
-
-      if (isVegetarian === "true") {
-        filter.vegetarian = true;
-      } else if (isVegetarian === "false") {
-        filter.vegetarian = false;
-      }
-
-      if (calRange) {
-        const [calMin, calMax] = calRange.split("-");
-        filter.calories = {
-          [Op.between]: [calMin, calMax],
-        };
-      }
+      const filterQuery = {
+        name: {
+          [Op.iLike]: name,
+        },
+        ...filter,
+      };
 
       const products = await Product.findAndCountAll({
+        where: filterQuery,
+        limit,
+        offset,
+      });
+
+      const allProducts = await Product.findAll({
         where: {
           name: {
             [Op.iLike]: name,
           },
-          ...filter,
         },
-        limit,
-        offset,
       });
-      res.status(200).json({ products });
-    } catch (error) {
-      return res.status(500).json({ message: "Внутренняя ошибка сервера" });
+
+      const prices = allProducts.map((product) => product.price);
+      const minPrice = Math.min(...prices);
+      const maxPrice = Math.max(...prices);
+
+      const calories = allProducts.map((product) => product.calories);
+      const minCalories = Math.min(...calories);
+      const maxCalories = Math.max(...calories);
+
+      const responseData = {
+        products,
+        minPrice,
+        maxPrice,
+        minCalories,
+        maxCalories,
+      };
+
+      res.status(200).json(responseData);
+    } catch (e) {
+      console.error(ApiError.internal(e.message));
     }
   }
 }
