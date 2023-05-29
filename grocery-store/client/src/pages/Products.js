@@ -7,7 +7,7 @@ import { Context } from "../index";
 import { fetchProductByCategory } from "../http/productAPI";
 import Filter from "../components/product/Filter";
 import "../assets/styles/Products.css";
-import { Row, Container } from "react-bootstrap";
+import { Row, Container, Spinner } from "react-bootstrap";
 import ProductList from "../components/product/ProductList";
 import PagesProduct from "../components/product/PagesProduct";
 import { PRODUCT_ADD } from "../utils/consts";
@@ -20,43 +20,38 @@ const Products = observer(() => {
     isVegetarian: false,
     calRange: "",
   });
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const data = await fetchProductByCategory(
-          categoryId,
-          filters,
-          product.page,
-          12
-        );
-        product.setProducts(data.rows);
-        product.setTotalCount(data.count);
-        category.setCategoryId(categoryId);
-      } catch (e) {
-        console.error(e);
-      }
-    };
-    fetchProducts();
-  }, [categoryId, filters]);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(1000);
+  const [minCalories, setMinCalories] = useState(0);
+  const [maxCalories, setMaxCalories] = useState(1000);
+  const [loading, setLoading] = useState(true);
 
+  const fetchProducts = async () => {
+    try {
+      const data = await fetchProductByCategory(
+        categoryId,
+        filters,
+        product.page,
+        12
+      );
+      setMinCalories(data.minCalories);
+      setMaxCalories(data.maxCalories);
+      setMinPrice(data.minPrice);
+      setMaxPrice(data.maxPrice);
+      product.setProducts(data.products.rows);
+      product.setTotalCount(data.products.count);
+      category.setCategoryId(categoryId);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const data = await fetchProductByCategory(
-          categoryId,
-          filters,
-          product.page,
-          12
-        );
-        product.setProducts(data.rows);
-        product.setTotalCount(data.count);
-        category.setCategoryId(categoryId);
-      } catch (e) {
-        console.error(e);
-      }
-    };
     fetchProducts();
-  }, [product.page]);
+  }, [categoryId, filters, product.page]);
+  
 
   useEffect(() => {
     return () => {
@@ -69,6 +64,10 @@ const Products = observer(() => {
     product.setPage(1);
   };
 
+  if (loading) {
+    return <Spinner animation={"grow"} />
+  }
+
   return (
     <>
       <div className="container-page">
@@ -78,7 +77,7 @@ const Products = observer(() => {
             <Row>
               <div className="products">
                 <div>
-                  <Filter onFilterChange={onFilterChange} />
+                  <Filter onFilterChange={onFilterChange} minPrice={minPrice} maxPrice={maxPrice} minCalories={minCalories} maxCalories={maxCalories} />
                 </div>
                 <div>
                   {user.user.role === "ADMIN" && (

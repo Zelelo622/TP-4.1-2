@@ -7,7 +7,7 @@ import { Context } from "../index";
 import { fetchProductByCategory, fetchProductByName } from "../http/productAPI";
 import Filter from "../components/product/Filter";
 import "../assets/styles/Products.css";
-import { Row, Col, Container } from "react-bootstrap";
+import { Row, Col, Container, Spinner } from "react-bootstrap";
 import ProductList from "../components/product/ProductList";
 import PagesProduct from "../components/product/PagesProduct";
 
@@ -21,14 +21,29 @@ const SearchProducts = observer(() => {
     isVegetarian: false,
     calRange: "",
   });
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(1000);
+  const [minCalories, setMinCalories] = useState(0);
+  const [maxCalories, setMaxCalories] = useState(1000);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchData() {
-      const data = await fetchProductByName(name, filters, product.page, 12);
-      product.setProducts(data.products.rows);
-      product.setTotalCount(data.products.count);
+    try {
+      async function fetchData() {
+        const data = await fetchProductByName(name, filters, product.page, 12);
+        setMinCalories(data.minCalories);
+        setMaxCalories(data.maxCalories);
+        setMinPrice(data.minPrice);
+        setMaxPrice(data.maxPrice);
+        product.setProducts(data.products.rows);
+        product.setTotalCount(data.products.count);
+      }
+      fetchData();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
     }
-    fetchData();
   }, [name, filters]);
 
   useEffect(() => {
@@ -42,6 +57,10 @@ const SearchProducts = observer(() => {
     product.setPage(1);
   };
 
+  if (loading) {
+    return <Spinner animation={"grow"} />
+  }
+
   return (
     <>
       <div className="container-page">
@@ -51,7 +70,13 @@ const SearchProducts = observer(() => {
             <Row>
               <div className="products">
                 <div>
-                  <Filter onFilterChange={onFilterChange} />
+                  <Filter
+                    onFilterChange={onFilterChange}
+                    minPrice={minPrice}
+                    maxPrice={maxPrice}
+                    minCalories={minCalories}
+                    maxCalories={maxCalories}
+                  />
                 </div>
                 <div>
                   <ProductList />
