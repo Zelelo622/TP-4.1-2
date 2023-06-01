@@ -105,7 +105,7 @@ const OrderTable = observer(
           {showAdminColumn && (
             <>
               <td className="table-order__data">
-                {orderItem.courier_id ? (
+                {orderItem.courier_id || orderItem.status === "Завершен" ? (
                   <span>
                     {(() => {
                       const foundCourier = couriers.find(
@@ -134,7 +134,7 @@ const OrderTable = observer(
                 )}
               </td>
               <td className="table-order__data">
-                {orderItem.courier_id ? (
+                {orderItem.courier_id && orderItem.status !== "Завершен" ? (
                   <Button
                     variant="danger"
                     size="sm"
