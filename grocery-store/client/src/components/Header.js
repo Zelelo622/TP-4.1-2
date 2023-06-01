@@ -58,7 +58,13 @@ const Header = observer(() => {
         <Container>
           <div className="header__inner">
             <div className="header__left">
-              <Link to={HOME} className="logo">
+              <Link
+                to={HOME}
+                onClick={() => {
+                  window.ym(93802517, "reachGoal", "MainLinkClick");
+                }}
+                className="logo"
+              >
                 DIEGO
               </Link>
               <form className="search" onSubmit={handleSearchSubmit}>
