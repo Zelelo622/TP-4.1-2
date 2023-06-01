@@ -36,25 +36,30 @@ class ProductController {
     }
 
     try {
-      const products = await Product.findAndCountAll({
+      let products = await Product.findAndCountAll({
         where: { categoryId, ...filter },
         limit,
         offset,
       });
 
-      const minPrice = await Product.min("price", {
+      let minPrice = await Product.min("price", {
         where: { categoryId },
       });
-      const maxPrice = await Product.max("price", {
+      let maxPrice = await Product.max("price", {
         where: { categoryId },
       });
 
-      const minCalories = await Product.min("calories", {
+      let minCalories = await Product.min("calories", {
         where: { categoryId },
       });
-      const maxCalories = await Product.max("calories", {
+      let maxCalories = await Product.max("calories", {
         where: { categoryId },
       });
+
+      minPrice = minPrice || 0;
+      maxPrice = maxPrice || 0;
+      minCalories = minCalories || 0;
+      maxCalories = maxCalories || 0;
 
       res.json({ products, minPrice, maxPrice, minCalories, maxCalories });
     } catch (e) {
@@ -318,13 +323,23 @@ class ProductController {
         },
       });
 
-      const prices = allProducts.map((product) => product.price);
-      const minPrice = Math.min(...prices);
-      const maxPrice = Math.max(...prices);
+      let minPrice, maxPrice, minCalories, maxCalories;
 
-      const calories = allProducts.map((product) => product.calories);
-      const minCalories = Math.min(...calories);
-      const maxCalories = Math.max(...calories);
+      if (allProducts.length > 0) {
+        const prices = allProducts.map((product) => product.price);
+        minPrice = Math.min(...prices);
+        maxPrice = Math.max(...prices);
+
+        const calories = allProducts.map((product) => product.calories);
+        minCalories = Math.min(...calories);
+        maxCalories = Math.max(...calories);
+      } else {
+        // Установка значений по умолчанию, если ничего не найдено
+        minPrice = 0;
+        maxPrice = 0;
+        minCalories = 0;
+        maxCalories = 0;
+      }
 
       const responseData = {
         products,
