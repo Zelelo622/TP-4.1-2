@@ -1,5 +1,4 @@
 .page-container {
-  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -25,6 +24,7 @@
   padding: 62px 47px 24px 35px;
   max-width: 500px;
   width: 100%;
+  margin: 50px 0;
 }
 
 .login-header {
@@ -40,12 +40,15 @@
   margin-bottom: 22px;
 }
 
+.login-group {
+  margin-bottom: 24px;
+}
+
 .login-label {
   margin-bottom: 14px;
 }
 
 .login-input {
-  margin-bottom: 24px;
   padding: 18px;
   border: 0.6px solid #282828;
   border-radius: 6px;
@@ -63,6 +66,10 @@
   padding: 17px 0;
   font-size: 18px;
   line-height: 23px;
+  transition: all 0.2s;
+}
+.login-button:hover {
+  opacity: 0.7;
 }
 
 .register-text {
@@ -76,6 +83,10 @@
   font-weight: 700;
   color: #000;
   text-decoration: none;
+  transition: all 0.2s;
+}
+.register-link:hover {
+  opacity: 0.7;
 }
 
 @media (max-width: 760px) {
@@ -87,6 +98,10 @@
     margin-bottom: 22px;
   }
 
+  .login-group {
+    margin-bottom: 18px;
+  }
+
   .login-label {
     margin-bottom: 10px;
   }
@@ -95,7 +110,6 @@
     padding: 8px;
     font-size: 14px;
     line-height: 13px;
-    margin-bottom: 18px;
   }
 
   .login-button {

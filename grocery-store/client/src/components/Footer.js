@@ -15,7 +15,7 @@ const Footer = () => {
                     <div className="footer__right">
                         <p className="footer__contact-info">Контактные данные:</p>
                         <Link to='tel:+78008008080' className="footer__contact-info">+7 (800) 800 80 80</Link>
-                        <Link to='mailto:testmail@gmail.com' className="footer__contact-info">testmail@gmail.com</Link>
+                        <Link to='mailto:testmail@gmail.com' className="footer__contact-info">egorcom27@gmail.com</Link>
                     </div>
                 </div>
             </Container>

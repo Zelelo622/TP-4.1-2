@@ -1,23 +1,50 @@
-import React, { useMemo, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import "../../assets/styles/ProductDetails.css";
-import { handleAddToCart } from "../../utils/cartUtils";
+import { addToCart } from "../../utils/cartUtils";
 import { NumericFormat } from "react-number-format";
+import { observer } from "mobx-react-lite";
+import { Context } from "../..";
+import { Link } from "react-router-dom";
+import { PRODUCTS, PRODUCT_UPDATE } from "../../utils/consts";
+import { deleteProduct } from "../../http/productAPI";
+import { Button, Modal } from "react-bootstrap";
 
-const ProductDetails = ({ product }) => {
+const ProductDetails = observer(({ productItem }) => {
   const [showCaloriesCalculator, setShowCaloriesCalculator] = useState(false);
   const [inputCalories, setInputCalories] = useState(0);
   const [packsAmount, setPacksAmount] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+  const { user, product } = useContext(Context);
+
+  const handleAddToCart = (productItem) => {
+    addToCart(productItem);
+    const totalQuantity = Number(localStorage.getItem("totalQuantity")) || 0;
+    product.setTotalQuantity(totalQuantity);
+  };
 
   const handleInputChange = (e) => {
     setInputCalories(e.target.value);
   };
 
+  const handleDeleteProduct = async () => {
+    await deleteProduct(productItem.name);
+    window.location.href = PRODUCTS + "/" + productItem.categoryId;
+  };
+
+  const handleShowModal = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   const { totalProtein, totalFat, totalCarbs } = useMemo(() => {
-    const proteinPer100g = product.protein;
-    const fatPer100g = product.fat;
-    const carbsPer100g = product.carbohydrates;
-    const caloriesPer100g = product.calories;
-    const packagingWeight = product.weight;
+    const proteinPer100g = productItem.protein;
+    const fatPer100g = productItem.fat;
+    const carbsPer100g = productItem.carbohydrates;
+    const caloriesPer100g = productItem.calories;
+    const packagingWeight = productItem.weight;
 
     const proteinPerCalorie = proteinPer100g / caloriesPer100g;
     const fatPerCalorie = fatPer100g / caloriesPer100g;
@@ -42,27 +69,74 @@ const ProductDetails = ({ product }) => {
     <div className="product-details-container">
       <div className="product-image">
         <img
-          src={process.env.REACT_APP_API_URL + product.img}
-          alt={product.name}
+          src={process.env.REACT_APP_API_URL + productItem.img}
+          alt={productItem.name}
         />
       </div>
       <div className="product-info">
-        <h2 className="product-title">{product.name}</h2>
+        <h2 className="product-title">{productItem.name}</h2>
         <div className="product-cart">
-          <p className="product-price">{product.price} руб.</p>
-          <button
-            className="add-to-cart-btn button"
-            onClick={(e) => {
-              handleAddToCart(product);
-            }}
-          >
-            В корзину
-          </button>
+          <p className="product-price">{productItem.price} руб.</p>
+          {user.user.role !== "COURIER" && (
+            <>
+              {user.user.role !== "ADMIN" ? (
+                <button
+                  className="add-to-cart-btn button"
+                  onClick={(e) => {
+                    handleAddToCart(productItem);
+                  }}
+                >
+                  В корзину
+                </button>
+              ) : (
+                <>
+                  <Link
+                    to={PRODUCT_UPDATE + `/${productItem.name}`}
+                    className="add-to-cart-btn button"
+                  >
+                    Редактировать товар
+                  </Link>
+                  <button
+                    onClick={handleShowModal}
+                    style={{ marginLeft: "10px" }}
+                    className="add-to-cart-btn add-to-cart-btn-red button"
+                  >
+                    Удалить
+                  </button>
+                  <Modal show={showModal} onHide={handleCloseModal}>
+                    <Modal.Header closeButton>
+                      <Modal.Title>Вы точно хотите удалить товар?</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Footer>
+                      <Button variant="secondary" onClick={handleCloseModal}>
+                        Нет
+                      </Button>
+                      <Button variant="primary" onClick={handleDeleteProduct}>
+                        Да
+                      </Button>
+                    </Modal.Footer>
+                  </Modal>
+                </>
+              )}
+            </>
+          )}
         </div>
+        <div className="product-container-info">
+          <p className="product-weight">Масса нетто:</p>
+          <p className="product-weight-val">{productItem.weight} г.</p>
+        </div>
+        <div className="product-container-info">
+          <p className="product-vegetarian">
+            {productItem.vegetarian
+              ? "Вегетарианский продукт"
+              : "Не вегетарианский продукт"}
+          </p>
+        </div>
+        <div className="product-cart-"></div>
         <div className="product-description">
           <div className="product-comp">
             <p className="comp-title">Состав:</p>
-            <p className="comp-text">{product.composition}</p>
+            <p className="comp-text">{productItem.composition}</p>
           </div>
           <div className="product-nutrition">
             <div className="product-calc">
@@ -92,7 +166,7 @@ const ProductDetails = ({ product }) => {
                     ? isNaN(totalProtein)
                       ? "0.0"
                       : totalProtein.toFixed(1)
-                    : product.protein
+                    : productItem.protein
                 }`}
               </li>
               <li className="nutrition-item">
@@ -102,7 +176,7 @@ const ProductDetails = ({ product }) => {
                     ? isNaN(totalFat)
                       ? "0.0"
                       : totalFat.toFixed(1)
-                    : product.fat
+                    : productItem.fat
                 }`}
               </li>
               <li className="nutrition-item">
@@ -112,7 +186,7 @@ const ProductDetails = ({ product }) => {
                     ? isNaN(totalCarbs)
                       ? "0.0"
                       : totalCarbs.toFixed(1)
-                    : product.carbohydrates
+                    : productItem.carbohydrates
                 }`}
               </li>
 
@@ -133,7 +207,7 @@ const ProductDetails = ({ product }) => {
               ) : (
                 <li className="nutrition-item">
                   Ккал:{" "}
-                  {`.....................................${product.calories}`}
+                  {`.....................................${productItem.calories}`}
                 </li>
               )}
             </ul>
@@ -151,6 +225,6 @@ const ProductDetails = ({ product }) => {
       </div>
     </div>
   );
-};
+});
 
 export default ProductDetails;

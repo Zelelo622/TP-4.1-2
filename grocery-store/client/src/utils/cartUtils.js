@@ -1,4 +1,4 @@
-export const handleAddToCart = (product) => {
+export const addToCart = (product) => {
   const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
   const existingProductIndex = cartItems.findIndex(
     (item) => item.id === product.id

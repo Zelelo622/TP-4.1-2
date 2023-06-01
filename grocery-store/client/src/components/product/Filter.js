@@ -4,10 +4,10 @@ import "rc-slider/assets/index.css";
 import { NumericFormat } from "react-number-format";
 import { Modal } from "react-bootstrap";
 
-const Filter = ({ onFilterChange }) => {
-  const [priceRange, setPriceRange] = useState([0, 1000]);
+const Filter = ({ onFilterChange, minPrice, maxPrice, minCalories, maxCalories }) => {
+  const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
   const [isVegetarian, setIsVegetarian] = useState("");
-  const [calRange, setCalRange] = useState([0, 2000]);
+  const [calRange, setCalRange] = useState([minCalories, maxCalories]);
   const [timer, setTimer] = useState(null);
 
   const [showFilter, setShowFilter] = useState(false);
@@ -22,6 +22,11 @@ const Filter = ({ onFilterChange }) => {
     };
     onFilterChange(filters);
   };
+
+  useEffect(() => {
+    setPriceRange([minPrice, maxPrice]);
+    setCalRange([minCalories, maxCalories]);
+  }, [minPrice, maxPrice, minCalories, maxCalories]);
 
   useEffect(() => {
     clearTimeout(timer);
@@ -71,8 +76,8 @@ const Filter = ({ onFilterChange }) => {
                 <Slider
                   className="filter-slider"
                   range
-                  min={0}
-                  max={1000}
+                  min={minPrice}
+                  max={maxPrice}
                   value={priceRange}
                   onChange={(value) => setPriceRange(value)}
                 />
@@ -102,8 +107,8 @@ const Filter = ({ onFilterChange }) => {
                 <Slider
                   className="filter-slider"
                   range
-                  min={0}
-                  max={2000}
+                  min={minCalories}
+                  max={maxCalories}
                   value={calRange}
                   onChange={(value) => setCalRange(value)}
                 />
@@ -141,9 +146,9 @@ const Filter = ({ onFilterChange }) => {
             <button
               className="btn filter-btn-clear"
               onClick={() => {
-                setPriceRange([0, 1000]);
+                setPriceRange([minPrice, maxPrice]);
                 setIsVegetarian("");
-                setCalRange([0, 2000]);
+                setCalRange([minCalories, maxCalories]);
                 onFilterChange({});
               }}
             >
@@ -184,8 +189,8 @@ const Filter = ({ onFilterChange }) => {
             <Slider
               className="filter-slider"
               range
-              min={0}
-              max={1000}
+              min={minPrice}
+              max={maxPrice}
               value={priceRange}
               onChange={(value) => setPriceRange(value)}
             />
@@ -215,8 +220,8 @@ const Filter = ({ onFilterChange }) => {
             <Slider
               className="filter-slider"
               range
-              min={0}
-              max={2000}
+              min={minCalories}
+              max={maxCalories}
               value={calRange}
               onChange={(value) => setCalRange(value)}
             />
@@ -252,7 +257,7 @@ const Filter = ({ onFilterChange }) => {
             <button
               className="btn filter-btn-clear"
               onClick={() => {
-                setPriceRange([0, 1000]);
+                setPriceRange([minPrice, maxPrice]);
                 setIsVegetarian("");
                 setCalRange([0, 2000]);
                 onFilterChange({});

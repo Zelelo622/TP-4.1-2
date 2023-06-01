@@ -1,7 +1,15 @@
 export const LOGIN_ROUTE = "/login";
 export const REGISTRATION_ROUTE = "/registration";
+export const RESET_PASS = "/reset-password";
 export const HOME = "/";
 export const PRODUCTS = "/products";
+export const SEARCH_PRODUCTS = "/search";
 export const PRODUCT = "/product";
 export const CART = "/cart";
 export const ORDER = "/order";
+export const PROFILE = "/profile";
+export const HISTORY_ORDER = "/history-order";
+export const PRODUCT_ORDER = "/product-order";
+export const PRODUCT_ADD = "/add-product"
+export const PRODUCT_UPDATE = "/update-product"
+export const USERS = "/users"

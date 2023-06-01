@@ -16,6 +16,13 @@ const PaymentModal = ({
   });
   const [errors, setErrors] = useState({});
 
+  const INVALID_CARD = {
+    cardNumber: "1111-1111-1111-1111",
+    expirationMonth: "01",
+    expirationYear: "24",
+    cvv: "123",
+  };
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setCardData({ ...cardData, [name]: value });
@@ -24,6 +31,19 @@ const PaymentModal = ({
   const handleSubmit = async (event) => {
     event.preventDefault();
     const { cardNumber, expirationMonth, expirationYear, cvv } = cardData;
+
+    if (
+      cardNumber === INVALID_CARD.cardNumber &&
+      expirationMonth === INVALID_CARD.expirationMonth &&
+      expirationYear === INVALID_CARD.expirationYear &&
+      cvv === INVALID_CARD.cvv
+    ) {
+      setErrors({
+        cardNumber: "Недостаточно средств на карте",
+      });
+      return;
+    }
+
     const errors = cardValidator({
       cardNumber,
       expirationMonth,
@@ -64,17 +84,18 @@ const PaymentModal = ({
               name="cardNumber"
               placeholder="Введите номер карты"
               value={cardData.cardNumber}
-              onChange={handleInputChange}
               isInvalid={!!errors.cardNumber}
               maxLength="19"
-              onKeyUp={(e) => {
-                const cardNumberValue = e.target.value
-                  .replace(/\D/g, "")
-                  .substring(0, 16);
-                e.target.value =
+              onChange={(e) => {
+                const cardNumberValue = e.target.value.replace(/\D/g, "");
+                const formattedCardNumber =
                   cardNumberValue !== ""
                     ? cardNumberValue.match(/.{1,4}/g).join("-")
                     : "";
+                if (formattedCardNumber !== e.target.value) {
+                  e.target.value = formattedCardNumber;
+                }
+                handleInputChange(e); // вызываем обработчик изменения данных
               }}
             />
             <Form.Control.Feedback type="invalid">

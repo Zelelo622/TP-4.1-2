@@ -1,0 +1,154 @@
+.profile__inner {
+  display: flex;
+}
+
+.profile__sidebar {
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 0px 30px rgba(170, 170, 170, 0.16);
+  border-radius: 10px;
+  padding: 30px;
+}
+
+.profile__sidebar-link {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 20px;
+  padding: 12px 40px 12px 12px;
+  transition: all 0.2s;
+  margin-bottom: 30px;
+}
+.profile__sidebar-link:hover {
+  padding: 12px 40px 12px 12px;
+  background: #f5f4f4;
+  border-radius: 8px;
+}
+
+.profile__sidebar-green {
+  padding: 12px 40px 12px 12px;
+  background: #eaf8f5;
+  border-radius: 8px;
+}
+
+.profile__info {
+  width: 100%;
+  box-shadow: 0px 0px 30px rgba(170, 170, 170, 0.16),
+    0px 10px 20px rgba(194, 194, 194, 0.16);
+  border-radius: 10px;
+  padding: 57px;
+  margin-left: 42px;
+}
+
+.profile__block-info {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 21px;
+}
+
+.profile__title {
+  margin-bottom: 11px;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 27px;
+}
+
+.profile__descr {
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 27px;
+}
+
+.profile__block-btn {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 41px;
+}
+
+.profile__btn-green {
+  background-color: #4acd29;
+}
+
+.profile__btn-red {
+  font-size: 16px;
+  color: #c40000;
+  background-color: transparent;
+  padding: 0;
+}
+
+.profile__btn-grey {
+  background-color: #a1a1a1;
+}
+
+.profile__btn-link {
+  border: none;
+  background-color: transparent;
+  text-align: left;
+  margin-bottom: 21px;
+  color: #4acd29;
+  transition: all 0.2s;
+}
+.profile__btn-link:hover {
+  opacity: 0.7;
+}
+
+.profile__buttons {
+  display: flex;
+  gap: 41px;
+}
+
+.order__text {
+  font-size: 20px;
+  margin-left: 41px;
+}
+
+@media (max-width: 991px) {
+  .profile__inner {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profile__sidebar {
+    width: 100%;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .profile__info {
+    margin-left: 0;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 520px) {
+  .profile__sidebar-link {
+    font-size: 16px;
+  }
+
+  .profile__title {
+    font-size: 16px;
+  }
+
+  .profile__descr {
+    font-size: 16px;
+  }
+
+  .profile__btn-green {
+    font-size: 16px;
+    padding: 7px 24px;
+  }
+
+  .profile__btn-red {
+    font-size: 12px;
+    padding: 7px 24px;
+  }
+
+  .profile__btn-grey {
+    font-size: 16px;
+    padding: 7px 24px;
+  }
+
+  .profile__buttons {
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+}
