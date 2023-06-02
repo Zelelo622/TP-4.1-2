@@ -38,6 +38,7 @@ const ProductCard = observer(({ productItem }) => {
                 onClick={(e) => {
                   e.preventDefault();
                   handleAddToCart(productItem);
+                  window.ym(93802517,'reachGoal','CartButtonFromEntireList')
                 }}
               ></button>
             )}

@@ -19,7 +19,7 @@ export const fetchOneProduct = async (name) => {
 
 export const fetchProductByName = async (name, filters, page, limit) => {
   const { priceRange, isVegetarian, calRange } = filters;
-  const query = `?name=${name}` +
+  const query = `?search=${name}` +
                 `${priceRange ? `&priceRange=${encodeURIComponent(priceRange)}` : ''}` +
                 `${isVegetarian ? `&isVegetarian=${encodeURIComponent(isVegetarian)}` : ''}` +
                 `${calRange ? `&calRange=${encodeURIComponent(calRange)}` : ''}` +

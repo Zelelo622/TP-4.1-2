@@ -1,7 +1,11 @@
 const { Sequelize } = require('sequelize');
+require('dotenv').config();
+
+const env = process.env.NODE_ENV || 'development';
+const dbName = env === 'test' ? process.env.DB_TEST_NAME : process.env.DB_NAME;
 
 module.exports = new Sequelize(
-    process.env.DB_NAME,
+    dbName,
     process.env.DB_USER,
     process.env.DB_PASSWORD,
     {
