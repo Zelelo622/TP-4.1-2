@@ -79,7 +79,7 @@ const Cart = observer(() => {
           <div className="cart">
             <Container>
               <div className="cart__header">
-                <h2 className="cart__title">Коризина</h2>
+                <h2 className="cart__title">Корзина</h2>
                 <div className="cart__nav">
                   <Link className="cart__nav-item" to={HOME}>Вернуться к покупкам</Link>
                   <button className="cart__nav-item" onClick={handleClearCart}>Очистить корзину</button>
