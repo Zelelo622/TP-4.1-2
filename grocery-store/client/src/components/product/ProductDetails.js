@@ -84,6 +84,7 @@ const ProductDetails = observer(({ productItem }) => {
                   className="add-to-cart-btn button"
                   onClick={(e) => {
                     handleAddToCart(productItem);
+                    window.ym(93802517,'reachGoal','CartButtonFromPageProd')
                   }}
                 >
                   В корзину
@@ -152,7 +153,10 @@ const ProductDetails = observer(({ productItem }) => {
               ) : (
                 <button
                   className="nutrotion-calc-btn button"
-                  onClick={() => setShowCaloriesCalculator(true)}
+                  onClick={() => {
+                    setShowCaloriesCalculator(true);
+                    window.ym(93802517, "reachGoal", "CalorieCalculatorClick");
+                  }}
                 >
                   Калькулятор калорий
                 </button>

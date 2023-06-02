@@ -273,11 +273,11 @@ class ProductController {
   }
 
   async search(req, res, next) {
-    let { name, priceRange, isVegetarian, calRange, limit, page } = req.query;
+    let { search, priceRange, isVegetarian, calRange, limit, page } = req.query;
     page = page || 1;
     limit = limit || 9;
     let offset = page * limit - limit;
-    name = name.replace(/\s+$/, "") + "%";
+    search = search.replace(/\s+$/, "") + "%";
 
     const filter = {};
 
@@ -304,7 +304,7 @@ class ProductController {
     try {
       const filterQuery = {
         name: {
-          [Op.iLike]: name,
+          [Op.iLike]: search,
         },
         ...filter,
       };
@@ -318,7 +318,7 @@ class ProductController {
       const allProducts = await Product.findAll({
         where: {
           name: {
-            [Op.iLike]: name,
+            [Op.iLike]: search,
           },
         },
       });

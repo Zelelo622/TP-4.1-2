@@ -4,7 +4,13 @@ import "rc-slider/assets/index.css";
 import { NumericFormat } from "react-number-format";
 import { Modal } from "react-bootstrap";
 
-const Filter = ({ onFilterChange, minPrice, maxPrice, minCalories, maxCalories }) => {
+const Filter = ({
+  onFilterChange,
+  minPrice,
+  maxPrice,
+  minCalories,
+  maxCalories,
+}) => {
   const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
   const [isVegetarian, setIsVegetarian] = useState("");
   const [calRange, setCalRange] = useState([minCalories, maxCalories]);
@@ -120,9 +126,10 @@ const Filter = ({ onFilterChange, minPrice, maxPrice, minCalories, maxCalories }
                     <input
                       type="checkbox"
                       checked={isVegetarian === "true"}
-                      onChange={(e) =>
-                        setIsVegetarian(e.target.checked ? "true" : "")
-                      }
+                      onChange={(e) => {
+                        setIsVegetarian(e.target.checked ? "true" : "");
+                        window.ym(93802517, "reachGoal", "YesBtnFilterClick");
+                      }}
                     />
                     <span className="checkbox-custom"></span>
                     Да
@@ -131,9 +138,10 @@ const Filter = ({ onFilterChange, minPrice, maxPrice, minCalories, maxCalories }
                     <input
                       type="checkbox"
                       checked={isVegetarian === "false"}
-                      onChange={(e) =>
-                        setIsVegetarian(e.target.checked ? "false" : "")
-                      }
+                      onChange={(e) => {
+                        setIsVegetarian(e.target.checked ? "false" : "");
+                        window.ym(93802517, "reachGoal", "NoBtnFilterClick");
+                      }}
                     />
                     <span className="checkbox-custom"></span>
                     Нет
