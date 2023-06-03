@@ -86,7 +86,7 @@ class OrderController {
 
       if (user.id !== userId) {
         return res.status(401).json({
-          message: "Нет прав на изменение данных другого пользователя",
+          message: "Нет прав на просмотр данных другого пользователя",
         });
       }
 
