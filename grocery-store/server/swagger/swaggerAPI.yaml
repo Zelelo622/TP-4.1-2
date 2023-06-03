@@ -20,7 +20,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/UserRegistration'
       responses:
         '200':
           description: Successful registration
@@ -913,6 +913,33 @@ components:
         phone:
           type: string
         password:
+          type: string
+          minLength: 6
+        secret_word:
+          type: string
+        role:
+          type: string
+      required:
+        - first_name
+        - second_name
+        - phone
+        - password
+        - passwordConfirmation
+        - secret_word
+
+    UserRegistration:
+      type: object
+      properties:
+        first_name:
+          type: string
+        second_name:
+          type: string
+        phone:
+          type: string
+        password:
+          type: string
+          minLength: 6
+        passwordConfirmation:
           type: string
           minLength: 6
         secret_word:
