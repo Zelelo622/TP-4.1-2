@@ -74,7 +74,14 @@ class OrderController {
       limit = limit || 9;
       let offset = page * limit - limit;
 
-      const token = req.headers.authorization.split(" ")[1];
+      const authorizationHeader = req.headers.authorization;
+      if (!authorizationHeader || !authorizationHeader.startsWith("Bearer ")) {
+        return res
+          .status(401)
+          .json({ message: "Отсутствует токен авторизации" });
+      }
+
+      const token = authorizationHeader.split(" ")[1];
       const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
       const userId = decodedToken.id;
       const user = await User.findOne({ where: { phone } });
@@ -86,7 +93,7 @@ class OrderController {
 
       if (user.id !== userId) {
         return res.status(401).json({
-          message: "Нет прав на просмотр данных другого пользователя",
+          message: "Нет прав на изменение данных другого пользователя",
         });
       }
 
@@ -117,7 +124,15 @@ class OrderController {
       limit = limit || 9;
       let offset = page * limit - limit;
 
-      const token = req.headers.authorization.split(" ")[1];
+      const authorizationHeader = req.headers.authorization;
+      if (!authorizationHeader || !authorizationHeader.startsWith("Bearer ")) {
+        return res
+          .status(401)
+          .json({ message: "Отсутствует токен авторизации" });
+      }
+
+      const token = authorizationHeader.split(" ")[1];
+
       const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
       const userId = decodedToken.id;
 
@@ -219,7 +234,14 @@ class OrderController {
     const { id } = req.params;
 
     try {
-      const token = req.headers.authorization.split(" ")[1];
+      const authorizationHeader = req.headers.authorization;
+      if (!authorizationHeader || !authorizationHeader.startsWith("Bearer ")) {
+        return res
+          .status(401)
+          .json({ message: "Отсутствует токен авторизации" });
+      }
+
+      const token = authorizationHeader.split(" ")[1];
       const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
       const userId = decodedToken.id;
       const userRole = decodedToken.role;
