@@ -233,7 +233,14 @@ class UserController {
       const { phone } = req.params;
       const { first_name, second_name, password, role } = req.body;
 
-      const token = req.headers.authorization.split(" ")[1];
+      const authorizationHeader = req.headers.authorization;
+      if (!authorizationHeader || !authorizationHeader.startsWith("Bearer ")) {
+        return res
+          .status(401)
+          .json({ message: "Отсутствует токен авторизации" });
+      }
+
+      const token = authorizationHeader.split(" ")[1];
       const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
       const userId = decodedToken.id;
       const userRole = decodedToken.role;
@@ -294,7 +301,14 @@ class UserController {
 
   async delete(req, res, next) {
     try {
-      const token = req.headers.authorization.split(" ")[1];
+      const authorizationHeader = req.headers.authorization;
+      if (!authorizationHeader || !authorizationHeader.startsWith("Bearer ")) {
+        return res
+          .status(401)
+          .json({ message: "Отсутствует токен авторизации" });
+      }
+
+      const token = authorizationHeader.split(" ")[1];
       const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
       const userId = decodedToken.id;
       const phone = decodedToken.phone;
@@ -316,7 +330,14 @@ class UserController {
 
   async deleteUserForAdmin(req, res, next) {
     try {
-      const token = req.headers.authorization.split(" ")[1];
+      const authorizationHeader = req.headers.authorization;
+      if (!authorizationHeader || !authorizationHeader.startsWith("Bearer ")) {
+        return res
+          .status(401)
+          .json({ message: "Отсутствует токен авторизации" });
+      }
+
+      const token = authorizationHeader.split(" ")[1];
       const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
       const phoneToken = decodedToken.phone;
       const { phone } = req.params;
