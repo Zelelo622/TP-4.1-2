@@ -14,6 +14,23 @@
 
 [Swagger](https://app.swaggerhub.com/apis/Zelelo622/OnlineStore/1.0.0#/)
 
+**Учетные записи:**
+
+Админ 1:
+- Телефон: 89046999565
+- Пароль: 123456  
+- Секретное слово: 1
+
+Админ 2:
+- Телефон: 89508008080
+- Пароль: admin2  
+- Секретное слово: 1
+
+Курьер:
+- Логин: 89046999561
+- Пароль: 124356
+- Секретное слово: 1  
+
 [Trello](https://clck.ru/33i4yT)  
 
 [Miro](https://miro.com/app/board/uXjVPirvLH8=/?share_link_id=660079656063)  
@@ -25,3 +42,9 @@
 [Курсовой проект](https://github.com/Zelelo622/TP-4.1-2/blob/main/Documentation/%D0%9A%D1%83%D1%80%D1%81%D0%BE%D0%B2%D0%BE%D0%B9%20%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82.pdf)  
 
 [Видеопрезентация 1 аттестация](https://drive.google.com/drive/folders/1g1VmRtenZCSb9VgOkumfm1q9vFuxpSxW?usp=sharing)
+
+[Видео про деплой](https://drive.google.com/file/d/1hnH0WJaaT4s4ijILgCu7XsP6hQxkVZKc/view?usp=sharing)  
+
+[Видео про frontend](https://drive.google.com/file/d/1G2sfAruafEqwSIpTPI3sh9LlQiFTEheg/view?usp=sharing)  
+
+[Видео про backend](https://drive.google.com/file/d/1qWUqDgYI1e2ncJXSjq0Kt3PtMY-BeyG8/view?usp=sharing)
