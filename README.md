@@ -43,6 +43,8 @@
 
 [Сопроводительное письмо](https://github.com/Zelelo622/TP-4.1-2/blob/main/Documentation/%D0%A1%D0%BE%D0%BF%D1%80%D0%BE%D0%B2%D0%BE%D0%B4%D0%B8%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5%20%D0%BF%D0%B8%D1%81%D1%8C%D0%BC%D0%BE.pdf)  
 
+[Презентация](https://github.com/Zelelo622/TP-4.1-2/blob/main/Documentation/%D0%9F%D1%80%D0%B5%D0%B7%D0%B5%D0%BD%D1%82%D0%B0%D1%86%D0%B8%D1%8F%20%D1%82%D0%BF.pdf)
+
 ## Видео
 
 [Видеопрезентация 1 аттестация](https://drive.google.com/drive/folders/1g1VmRtenZCSb9VgOkumfm1q9vFuxpSxW?usp=sharing)
@@ -51,7 +53,9 @@
 
 [Видео про frontend](https://drive.google.com/file/d/1G2sfAruafEqwSIpTPI3sh9LlQiFTEheg/view?usp=sharing)  
 
-[Видео про backend](https://drive.google.com/file/d/1qWUqDgYI1e2ncJXSjq0Kt3PtMY-BeyG8/view?usp=sharing)
+[Видео про backend](https://drive.google.com/file/d/1qWUqDgYI1e2ncJXSjq0Kt3PtMY-BeyG8/view?usp=sharing)  
+
+[Видеопрезентация](https://drive.google.com/file/d/1yGkb5_cwsD0WHqgtUJxEjWftGaBlXmp7/view?usp=sharing)
 
 ## Данные для демонстрации работы  
 
